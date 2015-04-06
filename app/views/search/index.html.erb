@@ -1,0 +1,8 @@
+<h1>JOBSEEKR</h1>
+<%= form_tag("/search", method: "get") do %>
+<%= label_tag(:location, "Your location") %>
+<%= text_field_tag :location, nil, placeholder: "Ex. 25 Chapel st, Brooklyn" %>
+<%= label_tag(:position, "What Job Are You Looking For?") %>
+<%= text_field_tag :position, nil, placeholder: "Web Developer" %>
+<%= submit_tag("Search") %>
+<% end %>

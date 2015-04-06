@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(version: 20150406172332) do
     t.string   "name"
     t.string   "email"
     t.string   "provider"
+    t.string   "uid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

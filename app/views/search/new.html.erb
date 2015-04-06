@@ -1,0 +1,13 @@
+<% @results.each do |hash| %>
+<p><b><%= hash['jobtitle'] %></b></p>
+
+<p><%= hash['company'] %></p>
+
+<p><%= hash['city'] %></p>
+
+<p><%= hash['snippet'] %></p>
+<%= link_to "Save Job", "/jobs/create/#{hash['jobkey']}" %>
+
+<br><br>
+
+<%end %>
