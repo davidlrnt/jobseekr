@@ -5,6 +5,7 @@
 <ul>
   <% if logged_in? %>
   <%= link_to "Log Out", "/logout", :method => 'delete' %>
+  <%= link_to "Profile", current_user %>
   <% else %>
   <h1>Log in</h1>
   <%= link_to("Login", '/auth/linkedin') %>

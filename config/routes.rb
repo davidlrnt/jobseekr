@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   resources :users
+  resources :jobs
   get '/search', to: 'search#new'
   get '/auth/linkedin/callback', to: 'sessions#create'
   delete 'logout'  => 'sessions#destroy'

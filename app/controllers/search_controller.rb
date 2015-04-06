@@ -4,8 +4,9 @@ class SearchController < ApplicationController
   end
 
   def new
-    query = {:l => params["location"], :q => params["position"], :v => 2}
+    query = {:l => params["location"], :q => params["position"],:latlong => 1, :v => 2}
     @results = getDetails(query)["response"]["results"]["result"]
+    @job = Job.new
   end
 
   def getDetails(query)

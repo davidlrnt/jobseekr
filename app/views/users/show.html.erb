@@ -1,4 +1,8 @@
 <%= @user.name %><br>
 <%= @user.email %><br>
-<%= @user.jobs.all.first %>
+<% @user.jobs.all.each do |job| %>
+<%= job.position %><br>
+<%= job.city.name %><br>
+<%= job.company %><br><br>
+<% end %>
 <%= link_to("Edit", edit_user_path) %>
