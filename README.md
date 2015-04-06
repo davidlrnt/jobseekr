@@ -37,4 +37,4 @@ Link to your blog, twitter, etc!
 
 ## License
 
-Jobseekr is MIT Licensed. See LICENSE for details.
+Jobseekr is MIT Licensed. See LICENSE for details.# jobseekr
