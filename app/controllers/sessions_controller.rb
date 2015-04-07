@@ -2,6 +2,7 @@ class SessionsController < ApplicationController
 
   def create
     auth = request.env['omniauth.auth']
+    binding.pry
     @user = User.create_with_omniauth(auth)
     log_in @user
     flash[:notice] = "Hello, #{@user.name}!"

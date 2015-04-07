@@ -3,8 +3,46 @@
 <%= label_tag(:location, "Your location") %>
 <%= text_field_tag :location, nil, placeholder: "Ex. 25 Chapel st, Brooklyn" %>
 <%= label_tag(:position, "What Job Are You Looking For?") %>
-<%= text_field_tag :position, nil, placeholder: "Web Developer" %>
+<%= text_field_tag "position[]", nil, placeholder: "Web Developer" %>
 <%= submit_tag("Search") %>
 <% end %>
+<div id="popup" class="popup">
+<%= form_tag("/search", method: "get") do %>
+<%= label_tag(:location, "Your location") %>
+<%= text_field_tag :location, nil, placeholder: "Ex. 25 Chapel st, Brooklyn" %>
+<%= label_tag(:position, "What Jobs Are You Looking For?") %>
+<%= text_field_tag "position[]", nil, placeholder: "Rails"%>
+<%= text_field_tag "position[]", nil, placeholder: "RoR" %>
+<%= text_field_tag "position[]", nil, placeholder: "JavaScript" %>
+<%= text_field_tag "position[]", nil, placeholder: "Python" %>
+<%= text_field_tag "position[]", nil, placeholder: "Django" %>
+
+<%= label_tag(:radius, "Search Radius: (miles)") %>
+<%= text_field_tag :radius, nil, placeholder: "ex.3" %>
+<%= submit_tag("Search") %>
+<% end %>
+</div>
+
+<a onclick="showPopup('popup');">Advanced Search</a>
+
+<style type="text/css">
+  .popup {
+    width:200px;
+    height:100px;
+    position:absolute;
+    top:50%;
+    left:50%;
+    margin:-50px 0 0 -100px; /* [-(height/2)px 0 0 -(width/2)px] */
+    display:none;
+  }
+</style>
+
+<script type="text/javascript">
 
 
+  function showPopup(id) {
+     $("#popup").slideToggle();
+
+  };
+
+</script>

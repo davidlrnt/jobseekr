@@ -1,3 +1,4 @@
+<img src= <%= @user.img_url || "http://www.genengnews.com/app_themes/genconnect/images/default_profile.jpg" %> height="50" width="50">
 <%= @user.name %><br>
 <%= @user.email %><br>
 <% @user.jobs.all.each do |job| %>

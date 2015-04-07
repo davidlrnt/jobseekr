@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
 
 private
   def self.auth_hash(auth)
-    {:provider => auth["provider"], :uid => auth["uid"], :name => auth["info"]["name"], :email => auth["info"]["email"]}
+    {:provider => auth["provider"], :uid => auth["uid"], :name => auth["info"]["name"], :email => auth["info"]["email"], :img_url => auth["info"]["image"]}
   end
 
 end
