@@ -1,6 +1,7 @@
 <% @locationsarr = [] %>
 <% @results.each do |array| %>
 <% array.each do |hash| %>
+<% binding.pry %>
 <% @locationsarr << [hash['company'], hash['latitude'].to_f,hash['longitude'].to_f] %>
 <p><b><%= hash['jobtitle'] %></b></p>
 
@@ -28,7 +29,6 @@
 
 <%end %>
 <% end %>
-  <%# binding.pry %>
   <div id="map"></div>
 
 

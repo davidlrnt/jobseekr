@@ -6,7 +6,6 @@ class JobsController < ApplicationController
     @job = Job.create(job_params)
     @job.update(city_id: city.id)
     current_user.jobs << @job
-    binding.pry
     redirect_to(:back)
 
   end
