@@ -8,25 +8,26 @@
 <p><%= hash['city'] %></p>
 
 <p><%= hash['snippet'] %></p>
-<%= form_for @job do |f| %>
-  <%= f.hidden_field :company, value: hash['company'] %>
-  <%= f.hidden_field :position, value: hash['jobtitle'] %>
-  <%= f.hidden_field :country, value: hash['country'] %>
-  <%= f.hidden_field :state, value: hash['state'] %>
-  <%= f.hidden_field :url, value: hash['url'] %>
-  <%= f.hidden_field :city, value: hash['city'] %>
-  <%= f.hidden_field :lat, value: hash['latitude'] %>
-  <%= f.hidden_field :long, value: hash['longitude'] %>
-  <%= f.hidden_field :job_key, value: hash['jobkey'] %>
-  <%= f.hidden_field :description, value: hash['snippet'] %>
-  <%= f.hidden_field :date_posted, value: hash['date'] %>
-  <%= f.submit "Save"%>
+<% if logged_in? %>
+  <%= form_for @job do |f| %>
+    <%= f.hidden_field :company, value: hash['company'] %>
+    <%= f.hidden_field :position, value: hash['jobtitle'] %>
+    <%= f.hidden_field :country, value: hash['country'] %>
+    <%= f.hidden_field :state, value: hash['state'] %>
+    <%= f.hidden_field :url, value: hash['url'] %>
+    <%= f.hidden_field :city, value: hash['city'] %>
+    <%= f.hidden_field :lat, value: hash['latitude'] %>
+    <%= f.hidden_field :long, value: hash['longitude'] %>
+    <%= f.hidden_field :job_key, value: hash['jobkey'] %>
+    <%= f.hidden_field :description, value: hash['snippet'] %>
+    <%= f.hidden_field :date_posted, value: hash['date'] %>
+    <%= f.submit "Save"%>
+  <% end %>
 <% end %>
 
 <br><br>
 
 <%end %>
-  <%# binding.pry %>
   <div id="map"></div>
 
 
@@ -102,4 +103,3 @@
     }
     autoCenter();
   </script>
-

@@ -8,10 +8,11 @@ class CreateJobs < ActiveRecord::Migration
       t.string :country
       t.string :state
       t.string :url
+      t.string :job_key
       t.references :city, index: true
       t.date :date_posted
       t.text :description
-      t.integer :job_key
+
 
       t.timestamps null: false
     end
