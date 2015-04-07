@@ -11,7 +11,6 @@ class SearchController < ApplicationController
     end
     zipcode = response[0]["long_name"] if response
     loc = zipcode || params["location"]
-    # binding.pry
     query = {:l => loc, :q => params["position"],:latlong => 1, :v => 2, :limit => 25}
     @results = getDetails(query)["response"]["results"]["result"]
     @job = Job.new
@@ -22,5 +21,3 @@ class SearchController < ApplicationController
   api_response = HTTParty.get(base_uri, :query => query)
   end
 end
-
-
