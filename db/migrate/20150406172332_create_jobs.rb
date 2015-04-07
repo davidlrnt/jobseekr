@@ -11,7 +11,7 @@ class CreateJobs < ActiveRecord::Migration
       t.references :city, index: true
       t.date :date_posted
       t.text :description
-      t.integer :job_key
+      t.string :job_key
 
       t.timestamps null: false
     end

@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(version: 20150406172332) do
     t.integer  "city_id"
     t.date     "date_posted"
     t.text     "description"
-    t.integer  "job_key"
+    t.string   "job_key"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
   end

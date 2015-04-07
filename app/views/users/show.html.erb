@@ -1,9 +1,15 @@
 <img src= <%= @user.img_url || "http://www.genengnews.com/app_themes/genconnect/images/default_profile.jpg" %> height="50" width="50">
 <%= @user.name %><br>
 <%= @user.email %><br>
+<%= link_to("Edit Profile", edit_user_path) %><br><br>
 <% @user.jobs.all.each do |job| %>
+<br>
 <%= job.position %><br>
 <%= job.city.name %><br>
-<%= job.company %><br><br>
+<%= job.company %><br>
+<%= link_to "Visit Indeed", job.url %><br>
+  <%= form_tag(job_path, method: "delete") %>
+  <%= hidden_field_tag(:job_id, value=job.id) %>
+  <%= submit_tag "Delete Post" %>
+<br>
 <% end %>
-<%= link_to("Edit", edit_user_path) %>
