@@ -9,6 +9,10 @@ class UsersController < ApplicationController
   end
 
   def edit
+    #edit job applied by the current user
+    @job_user = current_user.job_users.find_by_job_id(params[:job_id])
+    @job_user.update(applied: true)
+    redirect_to user_path
   end
 
   def update

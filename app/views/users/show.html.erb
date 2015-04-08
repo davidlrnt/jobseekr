@@ -3,13 +3,35 @@
 <%= @user.email %><br>
 <%= link_to("Edit Profile", edit_user_path) %><br><br>
 <% @user.jobs.all.each do |job| %>
-<br>
-<%= job.position %><br>
-<%= job.city.name %><br>
-<%= job.company %><br>
-<%= link_to "Visit Indeed", job.url %><br>
-  <%= form_tag(job_path, method: "delete") %>
+  <br>
+  <%= job.position %><br>
+  <%= job.city.name %><br>
+  <%= job.company %><br>
+  <%= link_to "Visit Indeed", job.url %><br>
+  <% @applied_job = @user.job_users.find_by_job_id(job.id) %>
+
+  <% if @applied_job.applied %>
+  <p>Applied</p>
+  <% else %>
+  <div class="update_apply">
+  </div>
+  <%= form_tag(edit_user_path, method: :get) do %>
   <%= hidden_field_tag(:job_id, value=job.id) %>
-  <%= submit_tag "Delete Post" %>
-<br>
+  <%= submit_tag "Applied?" %>
+  <% end %>
+  </div>
+  <% end %>
+  <% counter = job.job_users.where(applied:true)  %>
+  <%= counter.size %> people applied.
+
+
+
+
+  <div class="delete">
+    <%= form_tag(job_path, method: 'delete') do %>
+    <%= hidden_field_tag(:job_id, value=job.id) %>
+    <%= submit_tag "Delete Post" %>
+    <% end %>
+  </div>
+  <br>
 <% end %>
