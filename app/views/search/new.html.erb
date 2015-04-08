@@ -1,44 +1,81 @@
 <% @locationsarr = [] %>
-<% @results.each do |array| %>
+<% @results[:indeed].each do |array| %>
   <% array.each do |hash| %>
   <% @locationsarr << [hash['company'], hash['latitude'].to_f,hash['longitude'].to_f] %>
   <p><b><a href="<%= hash['url'] %>"><%= hash['jobtitle'] %></a></b></p>
-  <p><b><%= hash['company'] %></b></p>
+  <p><%= hash['company'] %></p>
   <p><%= hash['city'] %></p>
-
   <p><%= hash['snippet'] %></p>
+  <p>Date Posted: <%= hash['date']%></p>
     <% if logged_in? %>
-      <% if current_user.jobs.find_by_job_key(hash['jobkey'])%>
+       <% if current_user.jobs.find_by_job_key(hash['jobkey'])%>
         <p><b>saved</b></p>
-      <% else %>
-        <%= form_for @job do |f| %>
-          <%= f.hidden_field :company, value: hash['company'] %>
-          <%= f.hidden_field :position, value: hash['jobtitle'] %>
-          <%= f.hidden_field :country, value: hash['country'] %>
-          <%= f.hidden_field :state, value: hash['state'] %>
-          <%= f.hidden_field :url, value: hash['url'] %>
-          <%= f.hidden_field :city, value: hash['city'] %>
-          <%= f.hidden_field :lat, value: hash['latitude'] %>
-          <%= f.hidden_field :long, value: hash['longitude'] %>
-          <%= f.hidden_field :job_key, value: hash['jobkey'] %>
-          <%= f.hidden_field :description, value: hash['snippet'] %>
-          <%= f.hidden_field :date_posted, value: hash['date'] %>
-          <%= f.submit "Save"%>
+        <% else %>
+          <%= form_for @job do |f| %>
+            <%= f.hidden_field :company, value: hash['company'] %>
+            <%= f.hidden_field :position, value: hash['jobtitle'] %>
+            <%= f.hidden_field :country, value: hash['country'] %>
+            <%= f.hidden_field :state, value: hash['state'] %>
+            <%= f.hidden_field :url, value: hash['url'] %>
+            <%= f.hidden_field :city, value: hash['city'] %>
+            <%= f.hidden_field :lat, value: hash['latitude'] %>
+            <%= f.hidden_field :long, value: hash['longitude'] %>
+            <%= f.hidden_field :job_key, value: hash['jobkey'] %>
+            <%= f.hidden_field :description, value: hash['snippet'] %>
+            <%= f.hidden_field :date_posted, value: hash['date'] %>
+            <%= f.submit "Save"%>
           <% end %>
       <% end %>
-    <% @job_ticker = Job.find_by_job_key(hash['jobkey']) %>
+      <% @job_ticker = Job.find_by_job_key(hash['jobkey']) %>
       <% if @job_ticker.nil? %>
         No one has applied yet.
       <% else %>
         <% counter = @job_ticker.job_users.where(applied:true)  %>
         <%= counter.size %> people applied.
       <% end %>
-      <% binding.pry %>
-    <% end %>
-<br><br>
-
+    <br><br>
+    <%end %>
+  <%end %>
 <% end %>
+<% @results[:careerbuilder].each do |array| %>
+  <% array.each do |hash| %>
+  <% @locationsarr << [hash['Company'], hash['LocationLatitude'].to_f,hash['LocationLongitude'].to_f] %>
+  <h3><b><%= hash['JobTitle'] %></b></h3>
+  <%= image_tag(hash["CompanyImageURL"], height: '50', width: '50') %>
+  <p><%= hash['Company'] %></p>
+  <p><%= hash['City'] %></p>
+  <p><%= hash['DescriptionTeaser'] %></p>
+  <p>Date Posted: <%= hash['PostedDate']%></p>
 
+        <% if logged_in? %>
+        <% if current_user.jobs.find_by_job_key(hash['jobkey'])%>
+        <p><b>saved</b></p>
+        <% else %>
+      <%= form_for @job do |f| %>
+        <%= f.hidden_field :company, value: hash['Company'] %>
+        <%= f.hidden_field :position, value: hash['JobTitle'] %>
+        <%= f.hidden_field :country, value: 'US' %>
+        <%= f.hidden_field :state, value: hash['State'] %>
+        <%= f.hidden_field :url, value: hash['JobDetailsURL'] %>
+        <%= f.hidden_field :city, value: hash['City'] %>
+        <%= f.hidden_field :lat, value: hash['LocationLatitude'] %>
+        <%= f.hidden_field :long, value: hash['LocationLongitude'] %>
+        <%= f.hidden_field :job_key, value: hash['DID'] %>
+        <%= f.hidden_field :description, value: hash['DescriptionTeaser'] %>
+        <%= f.hidden_field :date_posted, value: hash['PostedDate'] %>
+        <%= f.submit "Save"%>
+      <% end %>
+      <% end %>
+      <% @job_ticker = Job.find_by_job_key(hash['jobkey']) %>
+      <% if @job_ticker.nil? %>
+        No one has applied yet.
+      <% else %>
+        <% counter = @job_ticker.job_users.where(applied:true)  %>
+        <%= counter.size %> people applied.
+      <% end %>
+    <br><br>
+    <%end %>
+  <% end %>
 <% end %>
   <div id="map"></div>
 

@@ -1,4 +1,6 @@
 <h1>JOBSEEKR</h1>
+
+<div id="simple" class="simple">
 <%= form_tag("/search", method: "get") do %>
 <%= label_tag(:location, "Your location") %>
 <%= text_field_tag :location, nil, placeholder: "Ex. 25 Chapel st, Brooklyn" %>
@@ -6,6 +8,7 @@
 <%= text_field_tag "position[]", nil, placeholder: "Web Developer" %>
 <%= submit_tag("Search") %>
 <% end %>
+</div>
 <div id="popup" class="popup">
 <%= form_tag("/search", method: "get") do %>
 <%= label_tag(:location, "Your location") %>
@@ -32,7 +35,7 @@
     position:absolute;
     top:50%;
     left:50%;
-    margin:-50px 0 0 -100px; /* [-(height/2)px 0 0 -(width/2)px] */
+    margin:-100px 0 0 -100px; /* [-(height/2)px 0 0 -(width/2)px] */
     display:none;
   }
 </style>
@@ -42,6 +45,7 @@
 
   function showPopup(id) {
      $("#popup").slideToggle();
+     $("#simple").slideToggle();
 
   };
 
