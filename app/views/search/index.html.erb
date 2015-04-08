@@ -18,7 +18,7 @@
 <%= text_field_tag "position[]", nil, placeholder: "Django" %>
 
 <%= label_tag(:radius, "Search Radius: (miles)") %>
-<%= text_field_tag :radius, nil, placeholder: "ex.3" %>
+<%= select_tag(:radius, options_for_select(1..25)) %>
 <%= submit_tag("Search") %>
 <% end %>
 </div>
