@@ -39,10 +39,15 @@ class SearchController < ApplicationController
     @results = {}
     params["position"].each do |position|
     querycareer =  {:location => loc, :keywords => position, :radius => career_radius, :orderby => 'date', :perpage => 50 }
-    carrer_uri = 'http://api.careerbuilder.com/v1/jobsearch?DeveloperKey=WDHV4LR6B3Y8W6T8FGDB'
-    cresponse = getDetails(querycareer, carrer_uri)
+    career_uri = 'http://api.careerbuilder.com/v1/jobsearch?DeveloperKey=WDHV4LR6B3Y8W6T8FGDB'
+    cresponse = getDetails(querycareer, career_uri)
+    if !cresponse["ResponseJobSearch"]["Results"]
+        flash[:notice] = "Invalid Job"
+        return redirect_to root_url
+    else
     @results[:careerbuilder] ||= []
     @results[:careerbuilder] << cresponse["ResponseJobSearch"]["Results"]["JobSearchResult"]
+    end
 
     query = {:l => loc, :q => position,:latlong => 1, :v => 2, :limit => 25, :sort => 'date', :radius => radius}
     indeed_uri = 'http://api.indeed.com/ads/apisearch?publisher=6706968191689061'
@@ -50,7 +55,7 @@ class SearchController < ApplicationController
     response = getDetails(query, indeed_uri)
       if !response["response"]["results"]
         flash[:notice] = "Invalid Job"
-        redirect_to root_url
+        return redirect_to root_url
       else
       @results[:indeed] ||= []
       @results[:indeed] << response["response"]["results"]["result"]
