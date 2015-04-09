@@ -1,7 +1,7 @@
 <% @locationsarr = [] %>
 <% @results[:indeed].each do |array| %>
   <% array.each do |hash| %>
-  <% @locationsarr << [hash['company'], hash['latitude'].to_f,hash['longitude'].to_f] %>
+  <% @locationsarr << [hash['company'], hash['latitude'].to_f,hash['longitude'].to_f] unless hash['latitude'].to_f == 0.0  %>
   <p><b><a href="<%= hash['url'] %>"><%= hash['jobtitle'] %></a></b></p>
   <p><%= hash['company'] %></p>
   <p><%= hash['city'] %></p>
@@ -39,7 +39,7 @@
 <% end %>
 <% @results[:careerbuilder].each do |array| %>
   <% array.each do |hash| %>
-  <% @locationsarr << ["<a href=#{hash['JobDetailsURL']} >#{hash['Company']}</a><p>#{hash['JobTitle']}</p><p>#{hash['Skills']['Skill'].join(", ") unless hash['Skills'].nil? || hash['Skills']['Skill'].is_a?(String)}</p>", hash['LocationLatitude'].to_f,hash['LocationLongitude'].to_f] %>
+  <% @locationsarr << ["<a href=#{hash['JobDetailsURL']} >#{hash['Company']}</a><p>#{hash['JobTitle']}</p><p>#{hash['Skills']['Skill'].join(", ") unless hash['Skills'].nil? || hash['Skills']['Skill'].is_a?(String)}</p>", hash['LocationLatitude'].to_f,hash['LocationLongitude'].to_f] unless hash['LocationLatitude'].to_f == 0.0 %>
 
 
   <p><b><a href="<%= hash['JobDetailsURL'] %>"><%= hash["JobTitle"] %></a></b></p>
