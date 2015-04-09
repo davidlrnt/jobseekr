@@ -21,8 +21,8 @@
 @import "bootstrap";
 /* Some Style from the Bootstrap Default Theme */
 body {
-  padding-top: 70px;
-  padding-bottom: 30px;
+    margin: 0;
+    padding: 0;
 }
 
 .theme-dropdown .dropdown-menu {
@@ -33,4 +33,40 @@ body {
 
 .theme-showcase > p > .btn {
   margin: 5px 0;
+}
+
+
+#map {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin:0 auto;
+  padding: 0;
+  z-index: -1;
+
+}
+
+.resultsList, .resultsItem{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+ }
+
+.resultsItem:after{
+  clear: both;
+  display: block;
+  content: '- - - - -';
+  color: rgba(0, 0, 0, .2);
+}
+
+.resultsContainer{
+  bottom: 0;
+  position: absolute;
+  overflow: auto;
+  width: 42%;
+  max-height: 80%;
+  padding: 1em 2em;
+  margin: 0;
+  margin-top: 3em;
+  background-color: azure;
 }

@@ -38,29 +38,46 @@ class SearchController < ApplicationController
     params["position"].delete("")
     @results = {}
     params["position"].each do |position|
-    querycareer =  {:location => loc, :keywords => position, :radius => career_radius, :orderby => 'date', :perpage => 50 }
+    i = 1
+    @results[:careerbuilder] ||= []
+
+    while i < 5 do
+    querycareer =  {:location => loc, :keywords => position, :pagenumber => i, :radius => career_radius, :orderby => 'date', :perpage => 50 }
     career_uri = 'http://api.careerbuilder.com/v1/jobsearch?DeveloperKey=WDHV4LR6B3Y8W6T8FGDB'
     cresponse = getDetails(querycareer, career_uri)
+    i += 1
     if !cresponse["ResponseJobSearch"]["Results"]
         flash[:notice] = "Invalid Job"
         return redirect_to root_url
     else
-    @results[:careerbuilder] ||= []
     @results[:careerbuilder] << cresponse["ResponseJobSearch"]["Results"]["JobSearchResult"]
+    break if i > cresponse["ResponseJobSearch"]["TotalPages"].to_i
+
     end
+    end
+    @results[:indeed] ||= []
 
-    query = {:l => loc, :q => position,:latlong => 1, :v => 2, :limit => 25, :sort => 'date', :radius => radius}
+    i = 1
+    while i <= 200 do
+    query = {:l => loc, :q => position,:latlong => 1, :v => 2,:start => i, :limit => 25, :sort => 'date', :radius => radius}
+
     indeed_uri = 'http://api.indeed.com/ads/apisearch?publisher=6706968191689061'
-
+    i += 25
     response = getDetails(query, indeed_uri)
       if !response["response"]["results"]
         flash[:notice] = "Invalid Job"
         return redirect_to root_url
       else
-      @results[:indeed] ||= []
-      @results[:indeed] << response["response"]["results"]["result"]
+
+        if response["response"]["results"]["result"].is_a?(Hash)
+          @results[:indeed] << [response["response"]["results"]["result"]]
+        else
+          @results[:indeed] << response["response"]["results"]["result"]
+        end
+
       end
     end
+  end #MARK
     @job = Job.new
   end
   end

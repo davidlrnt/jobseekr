@@ -1,12 +1,16 @@
+<div class="resultsContainer">
+<ul class="resultsList">
+<li class="resultsItem">
 <% @locationsarr = [] %>
 <% @results[:indeed].each do |array| %>
   <% array.each do |hash| %>
   <% @locationsarr << [hash['company'], hash['latitude'].to_f,hash['longitude'].to_f] unless hash['latitude'].to_f == 0.0  %>
-  <p><b><a href="<%= hash['url'] %>"><%= hash['jobtitle'] %></a></b></p>
-  <p><%= hash['company'] %></p>
+  <p><b><a href="<% hash['url'] %>"><%= hash['jobtitle'] %></a></b></p>
+  <h2><%= hash['company'] %></h2>
   <p><%= hash['city'] %></p>
   <p><%= hash['snippet'] %></p>
   <p>Date Posted: <%= hash['date']%></p>
+  <a href="http://www.glassdoor.com/GD/Reviews/company-reviews.htm?suggestCount=0&suggestChosen=false&clickSource=searchBtn&typedKeyword=<%= hash['company'] %>&sc.keyword=<%= hash['company'] %>&locT=&locId="><img src="https://gecd.mit.edu/sites/default/files/pictures/GlassdoorAccessButton.png"></a>
     <% if logged_in? %>
        <% if current_user.jobs.find_by_job_key(hash['jobkey'])%>
         <p><b>saved</b></p>
@@ -37,10 +41,11 @@
     <%end %>
   <%end %>
 <% end %>
+
 <% @results[:careerbuilder].each do |array| %>
   <% array.each do |hash| %>
+  <%# binding.pry %>
   <% @locationsarr << ["<a href=#{hash['JobDetailsURL']} >#{hash['Company']}</a><p>#{hash['JobTitle']}</p><p>#{hash['Skills']['Skill'].join(", ") unless hash['Skills'].nil? || hash['Skills']['Skill'].is_a?(String)}</p>", hash['LocationLatitude'].to_f,hash['LocationLongitude'].to_f] unless hash['LocationLatitude'].to_f == 0.0 %>
-
 
   <p><b><a href="<%= hash['JobDetailsURL'] %>"><%= hash["JobTitle"] %></a></b></p>
 
@@ -48,6 +53,7 @@
   <p><%= hash['City'] %></p>
   <p><%= hash['DescriptionTeaser'] %></p>
   <p>Date Posted: <%= hash['PostedDate']%></p>
+  <a href="http://www.glassdoor.com/GD/Reviews/company-reviews.htm?suggestCount=0&suggestChosen=false&clickSource=searchBtn&typedKeyword=<%= hash['Company'] %>&sc.keyword=<%= hash['Company'] %>&locT=&locId="><img src="https://gecd.mit.edu/sites/default/files/pictures/GlassdoorAccessButton.png"></a>
 
         <% if logged_in? %>
         <% if current_user.jobs.find_by_job_key(hash['DID'])%>
@@ -79,7 +85,14 @@
     <%end %>
   <% end %>
 <% end %>
-  <div id="map"></div>
+</div>
+</li>
+</ul>
+</div>
+
+  <div id="map" class="wrapper">
+
+  </div>
 
 <script src="http://jawj.github.com/OverlappingMarkerSpiderfier/bin/oms.min.js"></script>
 
