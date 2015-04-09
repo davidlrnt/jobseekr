@@ -10,8 +10,9 @@ class CreateJobs < ActiveRecord::Migration
       t.string :url
       t.references :city, index: true
       t.date :date_posted
-      t.text :description
+      t.text :description 
       t.string :job_key
+      t.boolean :created?, default: false
 
       t.timestamps null: false
     end

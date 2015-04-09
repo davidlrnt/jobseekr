@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   get '/search', to: 'search#new'
   get '/auth/linkedin/callback', to: 'sessions#create'
   delete 'logout'  => 'sessions#destroy'
+  get '/new_post', to: 'jobs#new'
+
+  post '/jobs/post', to: 'jobs#post'
 
   root 'search#index'
   # The priority is based upon order of creation: first created -> highest priority.
