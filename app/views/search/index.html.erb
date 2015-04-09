@@ -1,6 +1,7 @@
 <h1>JOBSEEKR</h1>
 
-<div id="simple" class="simple">
+<div class="wrapper">
+<div id="searchBar" class="searchBar verticalAlign">
 <%= form_tag("/search", method: "get") do %>
 <%= label_tag(:location, "Your location") %>
 <%= text_field_tag :location, nil, placeholder: "Ex. 25 Chapel st, Brooklyn" %>
@@ -8,45 +9,109 @@
 <%= text_field_tag "position[]", nil, placeholder: "Web Developer" %>
 <%= submit_tag("Search") %>
 <% end %>
+<a onclick="showPopup('popup');">Advanced Search</a>
+
 </div>
 <div id="popup" class="popup">
 <%= form_tag("/search", method: "get") do %>
-<%= label_tag(:location, "Your location") %>
-<%= text_field_tag :location, nil, placeholder: "Ex. 25 Chapel st, Brooklyn" %>
-<%= label_tag(:position, "What Jobs Are You Looking For?") %>
-<%= text_field_tag "position[]", nil, placeholder: "Rails"%>
-<%= text_field_tag "position[]", nil, placeholder: "RoR" %>
-<%= text_field_tag "position[]", nil, placeholder: "JavaScript" %>
-<%= text_field_tag "position[]", nil, placeholder: "Python" %>
-<%= text_field_tag "position[]", nil, placeholder: "Django" %>
+<br><%= label_tag(:location, "Your location") %>
+<br><%= text_field_tag :location, nil, placeholder: "Ex. 25 Chapel st, Brooklyn" %>
+<br><%= label_tag(:position, "What Jobs Are You Looking For?") %>
+<br><%= text_field_tag "position[]", nil, placeholder: "Rails"%>
+<br><%= text_field_tag "position[]", nil, placeholder: "RoR" %>
+<br><%= text_field_tag "position[]", nil, placeholder: "JavaScript" %>
+<br><%= text_field_tag "position[]", nil, placeholder: "Python" %>
+<br><%= text_field_tag "position[]", nil, placeholder: "Django" %>
 
-<%= label_tag(:radius, "Search Radius: (miles)") %>
-<%= select_tag(:radius, options_for_select(1..25)) %>
-<%= submit_tag("Search") %>
+<br><%= label_tag(:radius, "Search Radius: (miles)") %>
+<br><%= select_tag(:radius, options_for_select(1..25)) %>
+<br><%= submit_tag("Search") %>
+<br><a onclick="showPopup('popup');">Simple Search</a>
+
 <% end %>
+
+</div>
 </div>
 
-<a onclick="showPopup('popup');">Advanced Search</a>
 
-<style type="text/css">
-  .popup {
-    width:200px;
-    height:100px;
-    position:absolute;
-    top:50%;
-    left:50%;
-    margin:-100px 0 0 -100px; /* [-(height/2)px 0 0 -(width/2)px] */
-    display:none;
-  }
-</style>
+
+
+
+
+
+
+<div id="map" class="wrapper">
+
+  </div>
+
+<script src="http://jawj.github.com/OverlappingMarkerSpiderfier/bin/oms.min.js"></script>
+
+  <script>
+    // Define your locations: HTML content for the info window, latitude, longitude
+    var locations = <%= raw @locationsarr.to_json %>;
+    var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 13,
+      center: new google.maps.LatLng(40.7412,-73.9973),
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      mapTypeControl: false,
+      streetViewControl: false,
+      panControl: false,
+      zoomControlOptions: {
+         position: google.maps.ControlPosition.LEFT_BOTTOM
+      }
+    });
+
+    var infowindow = new google.maps.InfoWindow({
+      maxWidth: 160
+    });
+
+    var markers = new Array();
+
+    var iconCounter = 0;
+
+    // Add the markers and infowindows to the map
+    for (var i = 0; i < locations.length; i++) {
+      var marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map,
+        icon: icons[iconCounter]
+      });
+
+      markers.push(marker);
+
+    }
+
+    function autoCenter() {
+      //  Create a new viewpoint bound
+      var bounds = new google.maps.LatLngBounds();
+      //  Go through each...
+      for (var i = 0; i < markers.length; i++) {
+        bounds.extend(markers[i].position);
+      }
+      //  Fit these bounds to the map
+      map.fitBounds(bounds);
+    }
+    autoCenter();
+  </script>
+
+
+
+
+
+
+
+
 
 <script type="text/javascript">
 
 
   function showPopup(id) {
      $("#popup").slideToggle();
-     $("#simple").slideToggle();
+     $("#searchBar").slideToggle();
 
   };
 
 </script>
+
