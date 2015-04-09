@@ -27,6 +27,12 @@ class JobsController < ApplicationController
     redirect_to(:back)
   end
 
+  def delete
+     @job = Job.find_by(params[:job_id])
+     @job.destroy
+     redirect_to(:back)
+  end
+
   def post
     @job = Job.create(post_job_params)
     location = params[:street_address] + " " + params[:city]
@@ -37,18 +43,9 @@ class JobsController < ApplicationController
     lat = api_response["results"].first["geometry"]["location"]["lat"]
     lng = api_response["results"].first["geometry"]["location"]["lng"]
 
+    @job.update(country: params[:country], state: params[:state], date_posted: Date.today, job_key: @job.id, creator_id: current_user.id, city_id: city.id.to_i, lat: lat, long: lng)
 
-
-    @job.update(country: params[:country], state: params[:state], date_posted: Date.today, job_key: @job.id, created?: true, city_id: city.id.to_i, lat: lat, long: lng)
-
-
-
-
-
-
-
-
-
+    redirect_to "/users/#{current_user.id}"
   end
 
 

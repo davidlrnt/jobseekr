@@ -42,9 +42,9 @@ ActiveRecord::Schema.define(version: 20150406172332) do
     t.date     "date_posted"
     t.text     "description"
     t.string   "job_key"
-    t.boolean  "created?",    default: false
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.integer  "creator_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   add_index "jobs", ["city_id"], name: "index_jobs_on_city_id"

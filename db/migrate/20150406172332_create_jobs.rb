@@ -12,7 +12,7 @@ class CreateJobs < ActiveRecord::Migration
       t.date :date_posted
       t.text :description 
       t.string :job_key
-      t.boolean :created?, default: false
+      t.integer :creator_id
 
       t.timestamps null: false
     end

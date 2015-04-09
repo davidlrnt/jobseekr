@@ -27,10 +27,6 @@
   <% else %>
     No one has applied yet.
   <% end %>
-
-
-
-
   <div class="delete">
     <%= form_tag(job_path, method: 'delete') do %>
     <%= hidden_field_tag(:job_id, value=job.id) %>
@@ -39,3 +35,27 @@
   </div>
   <br>
 <% end %>
+<% @listing = Job.where(creator_id: current_user.id) %>
+<h4><b>Job you posted</b></h4><br>
+
+<% if !@listing.nil? %>
+  <% @listing.each do |listing| %>
+    <ul> <b>Company:</b> <%= listing.company %></ul>
+    <ul> <b>Position:</b> <%= listing.position %></ul>
+    <ul> <b>Description:</b> <%= listing.description %></ul>
+    <ul><a href = <%= listing.url %> > Visit Website</a> </ul><br>
+    <%= form_tag('/jobs/delete', method: 'post') do %>
+    <%= hidden_field_tag(:job_id, value=listing.id) %>
+    <%= submit_tag "Delete Job" %>
+    <% end %>
+  <% end %>
+
+
+
+
+<% end %>
+
+
+
+
+
