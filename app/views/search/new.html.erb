@@ -27,7 +27,7 @@
           <% end %>
       <% end %>
       <% @job_ticker = Job.find_by_job_key(hash['jobkey']) %>
-      <% if @job_ticker.nil? %>
+      <% if @job_ticker.nil? || @job_ticker.job_users.where(applied:true).size < 1 %>
         No one has applied yet.
       <% else %>
         <% counter = @job_ticker.job_users.where(applied:true)  %>
@@ -40,15 +40,17 @@
 <% @results[:careerbuilder].each do |array| %>
   <% array.each do |hash| %>
   <% @locationsarr << ["<a href=#{hash['JobDetailsURL']} >#{hash['Company']}</a><p>#{hash['JobTitle']}</p><p>#{hash['Skills']['Skill'].join(", ") unless hash['Skills'].nil? || hash['Skills']['Skill'].is_a?(String)}</p>", hash['LocationLatitude'].to_f,hash['LocationLongitude'].to_f] %>
-  <h3><b><%= hash['JobTitle'] %></b></h3>
-  <%= image_tag(hash["CompanyImageURL"], height: '50', width: '50') %>
+
+
+  <p><b><a href="<%= hash['JobDetailsURL'] %>"><%= hash["JobTitle"] %></a></b></p>
+
   <p><%= hash['Company'] %></p>
   <p><%= hash['City'] %></p>
   <p><%= hash['DescriptionTeaser'] %></p>
   <p>Date Posted: <%= hash['PostedDate']%></p>
 
         <% if logged_in? %>
-        <% if current_user.jobs.find_by_job_key(hash['jobkey'])%>
+        <% if current_user.jobs.find_by_job_key(hash['DID'])%>
         <p><b>saved</b></p>
         <% else %>
       <%= form_for @job do |f| %>
@@ -66,8 +68,8 @@
         <%= f.submit "Save"%>
       <% end %>
       <% end %>
-      <% @job_ticker = Job.find_by_job_key(hash['jobkey']) %>
-      <% if @job_ticker.nil? %>
+      <% @job_ticker = Job.find_by_job_key(hash['DID']) %>
+      <% if @job_ticker.nil? || @job_ticker.job_users.where(applied:true).size < 1 %>
         No one has applied yet.
       <% else %>
         <% counter = @job_ticker.job_users.where(applied:true)  %>
