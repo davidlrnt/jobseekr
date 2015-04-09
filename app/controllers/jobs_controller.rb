@@ -4,7 +4,6 @@ class JobsController < ApplicationController
   end
 
   def create
-    binding.pry
     if logged_in?
       city = City.find_by(name: params["job"]["city"]) || City.create(name: city_params["city"])
       @job = Job.find_by_job_key(job_params["job_key"])
@@ -41,9 +40,8 @@ class JobsController < ApplicationController
 
 
     @job.update(country: params[:country], state: params[:state], date_posted: Date.today, job_key: @job.id, created?: true, city_id: city.id.to_i, lat: lat, long: lng)
-    binding.pry
 
-    
+
 
 
 
