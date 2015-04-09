@@ -22,7 +22,11 @@
   </div>
   <% end %>
   <% counter = job.job_users.where(applied:true)  %>
-  <%= counter.size %> people applied.
+  <% if counter.size > 0 %>
+    <%= counter.size %> people applied.
+  <% else %>
+    No one has applied yet.
+  <% end %>
 
 
 
