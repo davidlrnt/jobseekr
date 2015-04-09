@@ -8,7 +8,7 @@ class SearchController < ApplicationController
     ##GETS ZIPCODE || CITY
     zipcode_uri = 'http://maps.googleapis.com/maps/api/geocode/json?'
     api_response = HTTParty.get(zipcode_uri, :query => {:address => params["location"]})
-
+    
     if api_response["results"].empty? && !params["location"].empty?
       flash[:notice] = "Invalid address"
       redirect_to root_url

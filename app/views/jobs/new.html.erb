@@ -1,0 +1,32 @@
+<%= form_tag(jobs_post_path, method: "post") do  %>
+<%= label_tag :company %>
+<%= text_field_tag :company %>
+<br>
+<%= label_tag :position %>
+<%= text_field_tag :position %>
+<br>
+<%= label_tag :description %>
+<%= text_field_tag :description %>
+<br>
+<%= label_tag :url %>
+<%= text_field_tag :url %>
+<br>
+<%= label_tag :street_address %>
+<%= text_field_tag :street_address %>
+<br>
+<%= label_tag :city %>
+<%= text_field_tag :city %>
+<br>
+<%= label_tag :state %>
+<%= text_field_tag :state %>
+<br>
+<%= label_tag :zipcode %>
+<%= text_field_tag :zipcode %>
+<br>
+<%= label_tag :country %>
+<%= text_field_tag :country, value="US" %>
+<br>
+<%= submit_tag "Create company" %>
+<% end %>
+
+
