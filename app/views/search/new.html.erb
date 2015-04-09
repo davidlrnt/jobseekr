@@ -39,8 +39,13 @@
 <% end %>
 <% @results[:careerbuilder].each do |array| %>
   <% array.each do |hash| %>
+<<<<<<< HEAD
   <% @locationsarr << [hash['Company'], hash['LocationLatitude'].to_f,hash['LocationLongitude'].to_f] %>
   <p><b><a href="<%= hash['JobDetailsURL'] %>"><%= hash["JobTitle"] %></a></b></p>
+=======
+  <% @locationsarr << ["<a href=#{hash['JobDetailsURL']} >#{hash['Company']}</a><p>#{hash['JobTitle']}</p><p>#{hash['Skills']['Skill'].join(", ") if !hash['Skills'].nil?}</p>", hash['LocationLatitude'].to_f,hash['LocationLongitude'].to_f] %>
+  <h3><b><%= hash['JobTitle'] %></b></h3>
+>>>>>>> ccd2086dffa95ad133d907554ec1f0cc41a59aed
   <%= image_tag(hash["CompanyImageURL"], height: '50', width: '50') %>
   <p><%= hash['Company'] %></p>
   <p><%= hash['City'] %></p>
@@ -79,6 +84,7 @@
 <% end %>
   <div id="map"></div>
 
+<script src="http://jawj.github.com/OverlappingMarkerSpiderfier/bin/oms.min.js"></script>
 
   <script>
     // Define your locations: HTML content for the info window, latitude, longitude
@@ -98,7 +104,7 @@
 
     var map = new google.maps.Map(document.getElementById('map'), {
       zoom: 10,
-      center: new google.maps.LatLng(-37.92, 151.25),
+      center: new google.maps.LatLng(40.7412,-73.9973),
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       mapTypeControl: false,
       streetViewControl: false,
@@ -107,6 +113,8 @@
          position: google.maps.ControlPosition.LEFT_BOTTOM
       }
     });
+
+    var oms = new OverlappingMarkerSpiderfier(map);
 
     var infowindow = new google.maps.InfoWindow({
       maxWidth: 160
@@ -125,8 +133,9 @@
       });
 
       markers.push(marker);
+      oms.addMarker(marker);
 
-      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+      google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
         return function() {
           infowindow.setContent(locations[i][0]);
           infowindow.open(map, marker);
