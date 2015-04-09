@@ -39,7 +39,7 @@
 <% end %>
 <% @results[:careerbuilder].each do |array| %>
   <% array.each do |hash| %>
-  <% @locationsarr << ["<a href=#{hash['JobDetailsURL']} >#{hash['Company']}</a><p>#{hash['JobTitle']}</p><p>#{hash['Skills']['Skill'].join(", ") if !hash['Skills'].nil?}</p>", hash['LocationLatitude'].to_f,hash['LocationLongitude'].to_f] %>
+  <% @locationsarr << ["<a href=#{hash['JobDetailsURL']} >#{hash['Company']}</a><p>#{hash['JobTitle']}</p><p>#{hash['Skills']['Skill'].join(", ") unless hash['Skills'].nil? || hash['Skills']['Skill'].is_a?(String)}</p>", hash['LocationLatitude'].to_f,hash['LocationLongitude'].to_f] %>
   <h3><b><%= hash['JobTitle'] %></b></h3>
   <%= image_tag(hash["CompanyImageURL"], height: '50', width: '50') %>
   <p><%= hash['Company'] %></p>
