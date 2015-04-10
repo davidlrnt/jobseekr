@@ -56,7 +56,7 @@
 
 <% @results[:careerbuilder].each do |array| %>
   <% array.each do |hash| %>
-  <%# binding.pry %>
+
   <li class="resultsItem">
   <% @locationsarr << ["<h2><a href=#{hash['JobDetailsURL']} >#{hash['Company']}</a><h2><br>
   <h3>#{hash['JobTitle']}</h3>
