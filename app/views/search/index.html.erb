@@ -4,7 +4,7 @@
 <%= text_field_tag "position[]", nil, placeholder: "Web Developer" %>
 <%= label_tag(:location, "jobs near") %>
 <%= text_field_tag :location, nil, placeholder: "25 Chapel St., Brooklyn" %>
-<%= submit_tag("Search") %>
+<%= submit_tag "Search", :id => "searchButton"  %>
 <a onclick="showPopup('popup');">(Advanced Search)</a>
 <% end %>
 
@@ -42,7 +42,7 @@
 
 
 
-<div id="map"> 
+<div id="map">
 
   </div>
 
