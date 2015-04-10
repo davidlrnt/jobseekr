@@ -126,13 +126,12 @@ body
 
 .searchBar {
   width: 55em;
-  height: 3.5em;
+  min-height: 3.5em;
   background-color: #50e3c2;
   display: table;
 }
 
 .searchBar form {
-  display: table-cell;
   vertical-align: middle;
   text-align: center;
   padding: 0.5em 1em;

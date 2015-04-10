@@ -3,7 +3,7 @@
 <%= label_tag(:position, "Looking for") %>
 <%= text_field_tag "position[]", nil, placeholder: "Web Developer" %>
 <%= label_tag(:location, "jobs near") %>
-<%= text_field_tag :location, nil, placeholder: "Ex. 25 Chapel st, Brooklyn" %>
+<%= text_field_tag :location, nil, placeholder: "25 Chapel St., Brooklyn" %>
 <%= submit_tag("Search") %>
 <a onclick="showPopup('popup');">(Advanced Search)</a>
 <% end %>
@@ -114,8 +114,8 @@
 
 
   function showPopup(id) {
-     $("#advancedSearch").slideToggle();
-     $("#searchBar>form").slideToggle();
+     $("#advancedSearch").slideToggle(400);
+     $("#searchBar>form").slideToggle(400);
 
   };
 
