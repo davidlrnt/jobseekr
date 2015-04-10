@@ -1,36 +1,39 @@
-<h1>JOBSEEKR</h1>
-
-<div class="wrapper">
 <div id="searchBar" class="searchBar verticalAlign">
 <%= form_tag("/search", method: "get") do %>
-<%= label_tag(:location, "Your location") %>
-<%= text_field_tag :location, nil, placeholder: "Ex. 25 Chapel st, Brooklyn" %>
-<%= label_tag(:position, "What Job Are You Looking For?") %>
+<%= label_tag(:position, "Looking for") %>
 <%= text_field_tag "position[]", nil, placeholder: "Web Developer" %>
+<%= label_tag(:location, "jobs near") %>
+<%= text_field_tag :location, nil, placeholder: "Ex. 25 Chapel st, Brooklyn" %>
 <%= submit_tag("Search") %>
+<a onclick="showPopup('popup');">(Advanced Search)</a>
 <% end %>
-<a onclick="showPopup('popup');">Advanced Search</a>
 
-</div>
-<div id="popup" class="popup">
+<div id="advancedSearch">
 <%= form_tag("/search", method: "get") do %>
-<br><%= label_tag(:location, "Your location") %>
-<br><%= text_field_tag :location, nil, placeholder: "Ex. 25 Chapel st, Brooklyn" %>
-<br><%= label_tag(:position, "What Jobs Are You Looking For?") %>
+<%= label_tag(:position, "Enter up to five job titles you're interested in:") %>
+<br>
 <br><%= text_field_tag "position[]", nil, placeholder: "Rails"%>
-<br><%= text_field_tag "position[]", nil, placeholder: "RoR" %>
+    <%= text_field_tag "position[]", nil, placeholder: "RoR" %>
 <br><%= text_field_tag "position[]", nil, placeholder: "JavaScript" %>
-<br><%= text_field_tag "position[]", nil, placeholder: "Python" %>
+    <%= text_field_tag "position[]", nil, placeholder: "Python" %>
 <br><%= text_field_tag "position[]", nil, placeholder: "Django" %>
 
-<br><%= label_tag(:radius, "Search Radius: (miles)") %>
-<br><%= select_tag(:radius, options_for_select(1..25)) %>
+<br>
+<br>
+<%= select_tag(:radius, options_for_select(1..25)) %>
+<%= label_tag(:location, "miles away from") %>
+<%= text_field_tag :location, nil, placeholder: "Ex. 25 Chapel st, Brooklyn" %>
+
+<br>
 <br><%= submit_tag("Search") %>
-<br><a onclick="showPopup('popup');">Simple Search</a>
+
+<br>
+<br><a onclick="showPopup('popup');"><i class="fa fa-close"></i>Back to Simple Search</a>
 
 <% end %>
 
 </div>
+
 </div>
 
 
@@ -39,8 +42,7 @@
 
 
 
-
-<div id="map" class="wrapper">
+<div id="map"> 
 
   </div>
 
@@ -108,8 +110,8 @@
 
 
   function showPopup(id) {
-     $("#popup").slideToggle();
-     $("#searchBar").slideToggle();
+     $("#advancedSearch").slideToggle();
+     $("#searchBar>form").slideToggle();
 
   };
 

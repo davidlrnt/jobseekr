@@ -6,6 +6,8 @@ class SearchController < ApplicationController
 
   def new
     ##GETS ZIPCODE || CITY
+  
+
     zipcode_uri = 'http://maps.googleapis.com/maps/api/geocode/json?'
     api_response = HTTParty.get(zipcode_uri, :query => {:address => params["location"]})
     

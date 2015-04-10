@@ -1,15 +1,27 @@
+<div id="searchBar" class="searchBar fullWidth">
+<%= form_tag("/search", method: "get") do %>
+<%= label_tag(:position, "Looking for") %>
+<%= text_field_tag "position[]", nil, placeholder: "Web Developer" %>
+<%= label_tag(:location, "jobs near") %>
+<%= text_field_tag :location, nil, placeholder: "Ex. 25 Chapel st, Brooklyn" %>
+<%= submit_tag("Search") %>
+<% end %>
+</div>
+
 <div class="resultsContainer">
 <ul class="resultsList">
-<li class="resultsItem">
 <% @locationsarr = [] %>
 <% @results[:indeed].each do |array| %>
   <% array.each do |hash| %>
-  <p><b><a href="<% hash['url'] %>"><%= hash['jobtitle'] %></a></b></p>
-  <h2><%= hash['company'] %></h2>
+  <li class="resultsItem">
+  <h2><a href="<%= hash['url'] %>"><%= hash['jobtitle'] %></a></h2>
+  <h3><%= hash['company'] %></h3>
   <p><%= hash['city'] %></p>
   <p><%= hash['snippet'] %></p>
   <p>Date Posted: <%= hash['date']%></p>
-  <a href="http://www.glassdoor.com/GD/Reviews/company-reviews.htm?suggestCount=0&suggestChosen=false&clickSource=searchBtn&typedKeyword=<%= hash['company'] %>&sc.keyword=<%= hash['company'] %>&locT=&locId="><img src="https://gecd.mit.edu/sites/default/files/pictures/GlassdoorAccessButton.png"></a>
+  <br>
+  <a href="http://www.glassdoor.com/GD/Reviews/company-reviews.htm?suggestCount=0&suggestChosen=false&clickSource=searchBtn&typedKeyword=<%= hash['company'] %>&sc.keyword=<%= hash['company'] %>&locT=&locId=">Glassdoor Reviews</a><br><br>
+
     <% if logged_in? %>
        <% if current_user.jobs.find_by_job_key(hash['jobkey'])%>
         <p><b>saved</b></p>
@@ -27,7 +39,7 @@
             <%= f.hidden_field :description, value: hash['snippet'] %>
             <%= f.hidden_field :date_posted, value: hash['date'] %>
             <% @locationsarr << ["<a href=#{hash['url']}>#{hash['company']}</a><br>#{hash['jobtitle']} <br> #{f.submit 'Save'}", hash['latitude'].to_f,hash['longitude'].to_f] unless hash['latitude'].to_f == 0.0  %>
-            <%= f.submit "Save"%>
+            <%= f.submit "Save"%><br><br>
           <% end %>
       <% end %>
       <% @job_ticker = Job.find_by_job_key(hash['jobkey']) %>
@@ -37,23 +49,27 @@
         <% counter = @job_ticker.job_users.where(applied:true)  %>
         <%= counter.size %> people applied.
       <% end %>
-    <br><br>
     <%end %>
   <%end %>
 <% end %>
+</li>
 
 <% @results[:careerbuilder].each do |array| %>
   <% array.each do |hash| %>
   <%# binding.pry %>
-  <% @locationsarr << ["<a href=#{hash['JobDetailsURL']} >#{hash['Company']}</a><p>#{hash['JobTitle']}</p><p>#{hash['Skills']['Skill'].join(", ") unless hash['Skills'].nil? || hash['Skills']['Skill'].is_a?(String)}</p>", hash['LocationLatitude'].to_f,hash['LocationLongitude'].to_f] unless hash['LocationLatitude'].to_f == 0.0 %>
+  <li class="resultsItem">
+  <% @locationsarr << ["<h2><a href=#{hash['JobDetailsURL']} >#{hash['Company']}</a><h2><br>
+  <h3>#{hash['JobTitle']}</h3>
+  <br>
+  <p>#{hash['Skills']['Skill'].join(", ") unless hash['Skills'].nil? || hash['Skills']['Skill'].is_a?(String)}</p>", hash['LocationLatitude'].to_f,hash['LocationLongitude'].to_f] unless hash['LocationLatitude'].to_f == 0.0 %>
 
-  <p><b><a href="<%= hash['JobDetailsURL'] %>"><%= hash["JobTitle"] %></a></b></p>
+  <h2><a href="<%= hash['JobDetailsURL'] %>"><%= hash["JobTitle"] %></a></h2>
 
-  <p><%= hash['Company'] %></p>
+  <h3><%= hash['Company'] %></h3>
   <p><%= hash['City'] %></p>
   <p><%= hash['DescriptionTeaser'] %></p>
   <p>Date Posted: <%= hash['PostedDate']%></p>
-  <a href="http://www.glassdoor.com/GD/Reviews/company-reviews.htm?suggestCount=0&suggestChosen=false&clickSource=searchBtn&typedKeyword=<%= hash['Company'] %>&sc.keyword=<%= hash['Company'] %>&locT=&locId="><img src="https://gecd.mit.edu/sites/default/files/pictures/GlassdoorAccessButton.png"></a>
+  <a href="http://www.glassdoor.com/GD/Reviews/company-reviews.htm?suggestCount=0&suggestChosen=false&clickSource=searchBtn&typedKeyword=<%= hash['Company'] %>&sc.keyword=<%= hash['Company'] %>&locT=&locId=">Glassdoor Reviews</a>
 
         <% if logged_in? %>
         <% if current_user.jobs.find_by_job_key(hash['DID'])%>
@@ -71,7 +87,7 @@
         <%= f.hidden_field :job_key, value: hash['DID'] %>
         <%= f.hidden_field :description, value: hash['DescriptionTeaser'] %>
         <%= f.hidden_field :date_posted, value: hash['PostedDate'] %>
-        <%= f.submit "Save"%>
+        <%= f.submit "Save"%><br>
       <% end %>
       <% end %>
       <% @job_ticker = Job.find_by_job_key(hash['DID']) %>
@@ -81,7 +97,7 @@
         <% counter = @job_ticker.job_users.where(applied:true)  %>
         <%= counter.size %> people applied.
       <% end %>
-    <br><br>
+    <br><br><br>
     <%end %>
   <% end %>
 <% end %>
@@ -90,7 +106,7 @@
 </ul>
 </div>
 
-  <div id="map" class="wrapper">
+  <div id="map" style="opacity: 0.9;">
 
   </div>
 
