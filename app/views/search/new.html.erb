@@ -7,8 +7,9 @@
 <%= submit_tag("Search") %>
 <% end %>
 </div>
+<% if logged_in? %>
 <% jobs_key = saved_jobs_key %>
-
+<% end %>
 <div class="resultsContainer">
 <ul class="resultsList">
 <% @locationsarr = [] %>
