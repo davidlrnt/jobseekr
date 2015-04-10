@@ -34,17 +34,19 @@ class JobsController < ApplicationController
   end
 
   def post
-    @job = Job.create(post_job_params)
-    location = params[:street_address] + " " + params[:city]
+    location = params[:street_address] + " " + params[:city] + " " + params[:zipcode]
     zipcode_uri = 'http://maps.googleapis.com/maps/api/geocode/json?'
     api_response = HTTParty.get(zipcode_uri, :query => {:address => location})
-
-    city = City.find_by(name: params["city"]) || City.create(name: params["city"])
-    lat = api_response["results"].first["geometry"]["location"]["lat"]
-    lng = api_response["results"].first["geometry"]["location"]["lng"]
-
-    @job.update(country: params[:country], state: params[:state], date_posted: Date.today, job_key: @job.id, creator_id: current_user.id, city_id: city.id.to_i, lat: lat, long: lng)
-
+    if api_response["results"].count > 0 && params[:city].downcase.strip == api_response["results"].first["address_components"][2]["long_name"].downcase
+      @job = Job.create(post_job_params)
+      city = City.find_by(name: params["city"]) || City.create(name: params["city"])
+      lat = api_response["results"].first["geometry"]["location"]["lat"]
+      lng = api_response["results"].first["geometry"]["location"]["lng"]
+      @job.update(country: params[:country], state: params[:state], date_posted: Date.today, job_key: @job.id, creator_id: current_user.id, city_id: city.id.to_i, lat: lat, long: lng)
+    else
+      flash[:notice] = "Invalid Job or location"
+      return redirect_to new_job_path
+    end
     redirect_to "/users/#{current_user.id}"
   end
 
