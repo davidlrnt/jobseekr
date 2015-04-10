@@ -38,6 +38,7 @@
 <% if @listing.count > 0 %>
   <h4><b>Job you posted</b></h4><br>
   <% @listing.each do |listing| %>
+  <div class="Job_listing">
     <ul> <b>Company:</b> <%= listing.company %></ul>
     <ul> <b>Position:</b> <%= listing.position %></ul>
     <ul> <b>Description:</b> <%= listing.description %></ul>
@@ -45,7 +46,7 @@
     <%= form_tag('/jobs/delete', method: 'post') do %>
       <%= hidden_field_tag(:job_id, value=listing.id) %>
       <%= submit_tag "Delete Job" %>
-    <% end %>
+    <% end %></div>
   <% end %>
 
 <% end %>
