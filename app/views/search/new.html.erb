@@ -56,7 +56,7 @@
 
 <% @results[:careerbuilder].each do |array| %>
   <% array.each do |hash| %>
-
+  <% if [hash['JobDetailsURL'],hash['Skills'],hash['Company'],hash['JobTitle'],hash['State'], hash['City'], hash['LocationLatitude'], hash['LocationLongitude'], hash['DID'], hash['DescriptionTeaser'], hash['PostedDate'] ].any? {|e| e.nil?} %>
   <li class="resultsItem">
   <% @locationsarr << ["<h2><a href=#{hash['JobDetailsURL']} >#{hash['Company']}</a><h2><br>
   <h3>#{hash['JobTitle']}</h3>
@@ -98,6 +98,7 @@
         <%= counter.size %> people applied.
       <% end %>
     <br><br><br>
+    <%end %>
     <%end %>
   <% end %>
 <% end %>
