@@ -3,6 +3,10 @@ class SearchController < ApplicationController
   def index
   end
 
+  def post 
+    binding.pry
+  end
+
 
   def new
     ##GETS ZIPCODE || CITY
@@ -40,10 +44,10 @@ class SearchController < ApplicationController
     end
 
     params["position"].delete("")
-    @results = {}
+    $globalresults ||= {}
     params["position"].each do |position|
     i = 1
-    @results[:careerbuilder] ||= []
+    $globalresults[:careerbuilder] ||= []
 
     while i < 5 do
     querycareer =  {:location => loc, :keywords => position, :excludenational => true, :pagenumber => i, :radius => career_radius, :orderby => 'date', :perpage => 50 }
@@ -57,17 +61,16 @@ class SearchController < ApplicationController
 
 
         if cresponse["ResponseJobSearch"]["Results"]["JobSearchResult"].is_a?(Hash)
-           @results[:careerbuilder] << [cresponse["ResponseJobSearch"]["Results"]["JobSearchResult"]]
+           $globalresults[:careerbuilder] << [cresponse["ResponseJobSearch"]["Results"]["JobSearchResult"]]
         else
-           @results[:careerbuilder] << cresponse["ResponseJobSearch"]["Results"]["JobSearchResult"]
+           $globalresults[:careerbuilder] << cresponse["ResponseJobSearch"]["Results"]["JobSearchResult"]
         end
 
-    @results[:careerbuilder] << cresponse["ResponseJobSearch"]["Results"]["JobSearchResult"]
     break if i > cresponse["ResponseJobSearch"]["TotalPages"].to_i
 
     end
     end
-    @results[:indeed] ||= []
+    $globalresults[:indeed] ||= []
 
     i = 1
     while i <= 200 do
@@ -75,6 +78,7 @@ class SearchController < ApplicationController
 
     indeed_uri = 'http://api.indeed.com/ads/apisearch?publisher=6706968191689061'
     i += 25
+    indexPage = 1
     response = getDetails(query, indeed_uri)
       if !response["response"]["results"]
         flash[:notice] = "Invalid Job"
@@ -82,16 +86,20 @@ class SearchController < ApplicationController
       else
 
         if response["response"]["results"]["result"].is_a?(Hash)
-          @results[:indeed] << [response["response"]["results"]["result"]]
+          $globalresults[:indeed] << [response["response"]["results"]["result"]]
         else
-          @results[:indeed] << response["response"]["results"]["result"]
+          $globalresults[:indeed] << response["response"]["results"]["result"]
         end
-
+        indexPage += 1
+         break if indexPage > response["response"]["pageNumber"].to_i
       end
     end
-  end #MARK
+  end
+  # binding.pry
     @job = Job.new
   end
+
+
   end
 
   def getDetails(query, base_uri)

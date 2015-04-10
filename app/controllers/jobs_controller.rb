@@ -1,6 +1,7 @@
 class JobsController < ApplicationController
 
   def new
+    @job = Job.new
   end
 
   def create
@@ -15,9 +16,21 @@ class JobsController < ApplicationController
         current_user.jobs << @job if !current_user.jobs.include?(@job)
       end
 
-      redirect_to(:back)
+      @job = Job.new
+      render 'search/new'
     else
       redirect_to '/auth/linkedin'
+    end
+  end
+
+  def update
+    respond_to do |format|
+      if @job.save
+        format.html { redirect_to @job, notice: 'Post was successfully created.' }
+        format.json { render action: 'search/new', status: :created, location: @job }
+      else
+        format.html { redirect_to '/auth/linkedin' }
+      end
     end
   end
 
@@ -27,30 +40,6 @@ class JobsController < ApplicationController
     redirect_to(:back)
   end
 
-  def delete
-     @job = Job.find_by(params[:job_id])
-     @job.destroy
-     redirect_to(:back)
-  end
-
-  def post
-    location = params[:street_address] + " " + params[:city] + " " + params[:zipcode]
-    zipcode_uri = 'http://maps.googleapis.com/maps/api/geocode/json?'
-    api_response = HTTParty.get(zipcode_uri, :query => {:address => location})
-    if api_response["results"].count > 0 && params[:city].downcase.strip == api_response["results"].first["address_components"][2]["long_name"].downcase
-      @job = Job.create(post_job_params)
-      city = City.find_by(name: params["city"]) || City.create(name: params["city"])
-      lat = api_response["results"].first["geometry"]["location"]["lat"]
-      lng = api_response["results"].first["geometry"]["location"]["lng"]
-      @job.update(country: params[:country], state: params[:state], date_posted: Date.today, job_key: @job.id, creator_id: current_user.id, city_id: city.id.to_i, lat: lat, long: lng)
-    else
-      flash[:notice] = "Invalid Job or location"
-      return redirect_to new_job_path
-    end
-    redirect_to "/users/#{current_user.id}"
-  end
-
-
   private
   # def set_user
   #   @user = User.find(params[:id])
@@ -59,12 +48,7 @@ class JobsController < ApplicationController
     params.require(:job).permit(:city)
   end
 
-  def post_job_params
-    params.permit(:company, :position, :description, :url)
-  end
-
   def job_params
       params.require(:job).permit(:company, :position, :country, :state, :url, :lat, :long, :job_key,:description, :date_posted)
   end
-
 end
