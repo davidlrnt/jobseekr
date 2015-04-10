@@ -11,7 +11,7 @@
 <div class="resultsContainer">
 <ul class="resultsList">
 <% @locationsarr = [] %>
-<% @results[:indeed].each do |array| %>
+<% $globalresults[:indeed].each do |array| %>
   <% array.each do |hash| %>
   <li class="resultsItem">
   <h2><a href="<%= hash['url'] %>"><%= hash['jobtitle'] %></a></h2>
@@ -54,11 +54,11 @@
 <% end %>
 </li>
 
-<% @results[:careerbuilder].each do |array| %>
+<% $globalresults[:careerbuilder].each do |array| %>
   <% array.each do |hash| %>
-  <% if [hash['JobDetailsURL'],hash['Skills'],hash['Company'],hash['JobTitle'],hash['State'], hash['City'], hash['LocationLatitude'], hash['LocationLongitude'], hash['DID'], hash['DescriptionTeaser'], hash['PostedDate'] ].any? {|e| e.nil?} %>
+  <%# if [hash['JobDetailsURL'], hash['Company'],hash['JobTitle'],hash['State'], hash['City'], hash['LocationLatitude'], hash['LocationLongitude'], hash['DID'], hash['DescriptionTeaser'], hash['PostedDate'] ].any? {|e| e.nil?} %>
   <li class="resultsItem">
-  <% @locationsarr << ["<h2><a href=#{hash['JobDetailsURL']} >#{hash['Company']}</a><h2><br>
+  <% @locationsarr << ["<a href=#{hash['JobDetailsURL']}>#{hash['Company']}</a>
   <h3>#{hash['JobTitle']}</h3>
   <br>
   <p>#{hash['Skills']['Skill'].join(", ") unless hash['Skills'].nil? || hash['Skills']['Skill'].is_a?(String)}</p>", hash['LocationLatitude'].to_f,hash['LocationLongitude'].to_f] unless hash['LocationLatitude'].to_f == 0.0 %>
@@ -99,7 +99,7 @@
       <% end %>
     <br><br><br>
     <%end %>
-    <%end %>
+    <%#end %>
   <% end %>
 <% end %>
 </div>
