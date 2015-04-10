@@ -8,8 +8,11 @@ class SearchController < ApplicationController
     ##GETS ZIPCODE || CITY
     zipcode_uri = 'http://maps.googleapis.com/maps/api/geocode/json?'
     api_response = HTTParty.get(zipcode_uri, :query => {:address => params["location"]})
-    
-    if api_response["results"].empty? && !params["location"].empty?
+    if params["position"][0].empty? && params["position"].length < 2
+
+      flash[:notice] = "Invalid Job"
+      redirect_to root_url
+    elsif api_response["results"].empty? && !params["location"].empty?
       flash[:notice] = "Invalid address"
       redirect_to root_url
     else
@@ -42,7 +45,7 @@ class SearchController < ApplicationController
     @results[:careerbuilder] ||= []
 
     while i < 5 do
-    querycareer =  {:location => loc, :keywords => position, :pagenumber => i, :radius => career_radius, :orderby => 'date', :perpage => 50 }
+    querycareer =  {:location => loc, :keywords => position, :excludenational => true, :pagenumber => i, :radius => career_radius, :orderby => 'date', :perpage => 50 }
     career_uri = 'http://api.careerbuilder.com/v1/jobsearch?DeveloperKey=WDHV4LR6B3Y8W6T8FGDB'
     cresponse = getDetails(querycareer, career_uri)
     i += 1
@@ -50,6 +53,14 @@ class SearchController < ApplicationController
         flash[:notice] = "Invalid Job"
         return redirect_to root_url
     else
+
+
+        if cresponse["ResponseJobSearch"]["Results"]["JobSearchResult"].is_a?(Hash)
+           @results[:careerbuilder] << [cresponse["ResponseJobSearch"]["Results"]["JobSearchResult"]]
+        else
+           @results[:careerbuilder] << cresponse["ResponseJobSearch"]["Results"]["JobSearchResult"]
+        end
+
     @results[:careerbuilder] << cresponse["ResponseJobSearch"]["Results"]["JobSearchResult"]
     break if i > cresponse["ResponseJobSearch"]["TotalPages"].to_i
 
