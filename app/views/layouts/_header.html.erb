@@ -1,9 +1,9 @@
 <nav class="homeNav">
 	<%= link_to "Home", root_path %>
   <% if logged_in? %>
-  <%= link_to "Log Out", "/logout", :method => 'delete' %>
   <%= link_to "Profile", current_user %>
   <%= link_to "Post Job", new_post_path  %>
+  <%= link_to "Log Out", "/logout", :method => 'delete' %>
   <% else %>
   <%= link_to("Login", '/auth/linkedin') %>
   <% end %>
