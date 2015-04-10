@@ -4,23 +4,22 @@
     <p><%= @user.email %></p><br>
     <%= link_to("Edit Profile", edit_user_path) %></div>
     <br><br><br>
-    <% @user.jobs.all.each do |job| %>
-      <br>
+    <% @user.jobs.all.each do |job| %><br>
       <%= job.position %><br>
       <%= job.city.name %><br>
       <%= job.company %><br>
-      <%= link_to "Visit Indeed", job.url %><br>
+      <%= link_to "Visit Job Listing", job.url %><br>
       <% @applied_job = @user.job_users.find_by_job_id(job.id) %>
 
       <% if @applied_job.applied %>
-      <p>Applied</p>
+        <p>Applied</p>
       <% else %>
-      <div class="update_apply">
-      <%= form_tag(edit_user_path, method: :get) do %>
-      <%= hidden_field_tag(:job_id, value=job.id) %>
-      <%= submit_tag "Applied?" %>
-      <% end %>
-      </div>
+        <div class="update_apply">
+        <%= form_tag(edit_user_path, method: :get) do %>
+        <%= hidden_field_tag(:job_id, value=job.id) %>
+        <%= submit_tag "Applied?" %>
+        <% end %>
+        </div>
       <% end %>
       <% counter = job.job_users.where(applied:true)  %>
       <% if counter.size > 0 %>
@@ -31,14 +30,15 @@
       <div class="delete">
         <%= form_tag(job_path, method: 'delete') do %>
         <%= hidden_field_tag(:job_id, value=job.id) %>
-        <%= submit_tag "Delete Post" %>
+        <%= submit_tag "Delete Job" %>
         <% end %>
       </div>
       <br>
     <% end %>
+
     <% @listing = Job.where(creator_id: current_user.id) %>
     <% if @listing.count > 0 %>
-      <h4><b>Job you posted</b></h4><br>
+      <h1><b>Job you posted</b></h1><br>
       <% @listing.each do |listing| %>
       <div class="Job_listing">
       <ul> <b>Company:</b> <%= listing.company %></ul>
