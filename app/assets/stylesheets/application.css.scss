@@ -206,6 +206,20 @@ input, select, textarea, textarea:focus, input:focus {
   color: white;
 }
 
+.madeBy {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding-right: 1em;
+}
+
+
+
+.madeBy a {
+  color: black;
+  font-weight: bold;
+}
+
 #advancedSearch
 {
     display: none;
