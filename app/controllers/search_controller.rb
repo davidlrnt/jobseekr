@@ -95,7 +95,6 @@ class SearchController < ApplicationController
       end
     end
   end
-  # binding.pry
     @job = Job.new
   end
 

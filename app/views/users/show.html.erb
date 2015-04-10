@@ -1,38 +1,37 @@
 <div class="dashContainer">
-  <img src= <%= @user.img_url || "http://www.genengnews.com/app_themes/genconnect/images/default_profile.jpg" %> height="100" width="100">
-  <div class="userAvatar"><h2><%= @user.name %></h2><br>
-  <p><%= @user.email %></p><br>
-  <%= link_to("Edit Profile", edit_user_path) %></div>
-  <br><br><br>
 
-  <% @user.jobs.all.each do |job| %><br>
-    <%= job.position %><br>
-    <%= job.city.name %><br>
-    <%= job.company %><br>
-    <%= link_to "Visit Indeed", job.url %><br>
-    <% @applied_job = @user.job_users.find_by_job_id(job.id) %>
+    <img src= <%= @user.img_url || "http://www.genengnews.com/app_themes/genconnect/images/default_profile.jpg" %> height="100" width="100">
+    <div class="userAvatar"><h2><%= @user.name %></h2><br>
+    <p><%= @user.email %></p><br>
+    <%= link_to("Edit Profile", edit_user_path) %></div>
+    <br><br><br>
+    <% @user.jobs.all.each do |job| %><br>
+      <%= job.position %><br>
+      <%= job.city.name %><br>
+      <%= job.company %><br>
+      <%= link_to "Visit Job Listing", job.url %><br>
+      <% @applied_job = @user.job_users.find_by_job_id(job.id) %>
 
-    <% if @applied_job.applied %>
-      <p>Applied</p>
-    <% else %>
-      <div class="update_apply">
-      <%= form_tag(edit_user_path, method: :get) do %>
-      <%= hidden_field_tag(:job_id, value=job.id) %>
-      <%= submit_tag "Applied?" %>
+      <% if @applied_job.applied %>
+        <p>Applied</p>
+      <% else %>
+        <div class="update_apply">
+        <%= form_tag(edit_user_path, method: :get) do %>
+        <%= hidden_field_tag(:job_id, value=job.id) %>
+        <%= submit_tag "Applied?" %>
+        <% end %>
+        </div>
       <% end %>
-      </div>
-    <% end %>
-
-    <% counter = job.job_users.where(applied:true)  %>
-    <% if counter.size > 0 %>
-      <%= counter.size %> people applied.
-    <% else %>
-      No one has applied yet.
-    <% end %>
+      <% counter = job.job_users.where(applied:true)  %>
+      <% if counter.size > 0 %>
+        <%= counter.size %> people applied.
+      <% else %>
+        No one has applied yet.
+      <% end %>
       <div class="delete">
         <%= form_tag(job_path, method: 'delete') do %>
         <%= hidden_field_tag(:job_id, value=job.id) %>
-        <%= submit_tag "Delete Post" %>
+        <%= submit_tag "Delete Job" %>
         <% end %>
       </div><br>
   <% end %>
