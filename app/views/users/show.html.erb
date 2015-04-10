@@ -24,7 +24,11 @@
       <% end %>
       <% counter = job.job_users.where(applied:true)  %>
       <% if counter.size > 0 %>
-        <%= counter.size %> people applied.
+        <% if counter.size == 1 %>
+          1 person has applied
+        <% else %> %>
+          <%= counter.size %> people have applied.
+        <% end %>
       <% else %>
         No one has applied yet.
       <% end %>

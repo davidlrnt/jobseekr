@@ -49,7 +49,11 @@
         No one has applied yet.
       <% else %>
         <% counter = @job_ticker.job_users.where(applied:true)  %>
-        <%= counter.size %> people applied.
+        <% if counter.size == 1 %>
+          1 person has applied
+        <% else %>
+          <%= counter.size %> people have applied.
+        <% end %>
       <% end %>
     <%end %>
   <%end %>
