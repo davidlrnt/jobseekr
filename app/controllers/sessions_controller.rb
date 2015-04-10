@@ -4,7 +4,7 @@ class SessionsController < ApplicationController
     auth = request.env['omniauth.auth']
     @user = User.create_with_omniauth(auth)
     log_in @user
-    flash[:notice] = "Hello, #{@user.name}!"
+    flash[:notice] = "Hello, #{@user.name}! ♥"
     redirect_to '/'
   end
 
