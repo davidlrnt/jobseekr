@@ -1,0 +1,146 @@
+<div id="searchBar" class="searchBar fullWidth">
+<%= form_tag("/search", method: "get") do %>
+<%= label_tag(:position, "Looking for") %>
+<%= text_field_tag "position[]", nil, placeholder: "Web Developer" %>
+<%= label_tag(:location, "jobs near") %>
+<%= text_field_tag :location, nil, placeholder: "Ex. 25 Chapel st, Brooklyn" %>
+<%= submit_tag("Search") %>
+<% end %>
+</div>
+<div class="resultsContainer">
+	<ul class="resultsList">
+	<% @locationsarr = [] %>
+	<% $globalresults[:indeed].each do |array| %>
+	  <% array.each do |hash| %>
+	  <li class="resultsItem">
+	  <h2><a href="<%= hash['url'] %>"><%= hash['jobtitle'] %></a></h2>
+	  <h3><%= hash['company'] %></h3>
+	  <p><%= hash['city'] %></p>
+	  <p><%= hash['snippet'] %></p>
+	  <p>Date Posted: <%= hash['date']%></p>
+	  <br>
+	  <a href="http://www.glassdoor.com/GD/Reviews/company-reviews.htm?suggestCount=0&suggestChosen=false&clickSource=searchBtn&typedKeyword=<%= hash['company'] %>&sc.keyword=<%= hash['company'] %>&locT=&locId=">Glassdoor Reviews</a><br><br>
+    <% @job_ticker = Job.find_by_job_key(hash['jobkey']) %>
+    <% if @job_ticker.nil? || @job_ticker.job_users.where(applied:true).size < 1 %>
+      No one has applied yet.
+    <% else %>
+      <% counter = @job_ticker.job_users.where(applied:true)  %>
+      <% if counter.size == 1 %>
+        1 person has applied
+      <% else %>
+        <%= counter.size %> people have applied.
+      <% end %>
+    <% end %>
+  <%end %>
+</li>
+
+<% $globalresults[:careerbuilder].each do |array| %>
+  <% array.each do |hash| %>
+	  <li class="resultsItem">
+	  <% @locationsarr << ["<a href=#{hash['JobDetailsURL']}>#{hash['Company']}</a>
+	  <h3>#{hash['JobTitle']}</h3><br>
+	  <p>#{hash['Skills']['Skill'].join(", ") unless hash['Skills'].nil? || hash['Skills']['Skill'].is_a?(String)}</p>", hash['LocationLatitude'].to_f,hash['LocationLongitude'].to_f] unless hash['LocationLatitude'].to_f == 0.0 %>
+	  <h2><a href="<%= hash['JobDetailsURL'] %>"><%= hash["JobTitle"] %></a></h2>
+	  <h3><%= hash['Company'] %></h3>
+	  <p><%= hash['City'] %></p>
+	  <p><%= hash['DescriptionTeaser'] %></p>
+	  <p>Date Posted: <%= hash['PostedDate']%></p>
+	  <a href="http://www.glassdoor.com/GD/Reviews/company-reviews.htm?suggestCount=0&suggestChosen=false&clickSource=searchBtn&typedKeyword=<%= hash['Company'] %>&sc.keyword=<%= hash['Company'] %>&locT=&locId=">Glassdoor Reviews</a>
+
+    <% @job_ticker = Job.find_by_job_key(hash['DID']) %>
+    <% if @job_ticker.nil? || @job_ticker.job_users.where(applied:true).size < 1 %>
+        No one has applied yet.
+    <% else %>
+      <% counter = @job_ticker.job_users.where(applied:true)  %>
+      <%= counter.size %> people applied.
+    <% end %>
+    <br><br><br>
+  <% end %>
+<% end %>
+<% end %>
+</div>
+</li>
+</ul>
+</div>
+
+  <div id="map" style="opacity: 0.9;">
+
+  </div>
+
+<script src="http://jawj.github.com/OverlappingMarkerSpiderfier/bin/oms.min.js"></script>
+
+  <script>
+    // Define your locations: HTML content for the info window, latitude, longitude
+    var locations = <%= raw @locationsarr.to_json %>;
+    var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
+
+    var icons = [
+      iconURLPrefix + 'red-dot.png',
+      iconURLPrefix + 'green-dot.png',
+      iconURLPrefix + 'blue-dot.png',
+      iconURLPrefix + 'orange-dot.png',
+      iconURLPrefix + 'purple-dot.png',
+      iconURLPrefix + 'pink-dot.png',
+      iconURLPrefix + 'yellow-dot.png'
+    ]
+    var iconsLength = icons.length;
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 10,
+      center: new google.maps.LatLng(40.7412,-73.9973),
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      mapTypeControl: false,
+      streetViewControl: false,
+      panControl: false,
+      zoomControlOptions: {
+         position: google.maps.ControlPosition.LEFT_BOTTOM
+      }
+    });
+
+    var oms = new OverlappingMarkerSpiderfier(map);
+
+    var infowindow = new google.maps.InfoWindow({
+      maxWidth: 160
+    });
+
+    var markers = new Array();
+
+    var iconCounter = 0;
+
+    // Add the markers and infowindows to the map
+    for (var i = 0; i < locations.length; i++) {
+      var marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map,
+        icon: icons[iconCounter]
+      });
+
+      markers.push(marker);
+      oms.addMarker(marker);
+
+      google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+
+      iconCounter++;
+      // We only have a limited number of possible icon colors, so we may have to restart the counter
+      if(iconCounter >= iconsLength) {
+        iconCounter = 0;
+      }
+    }
+
+    function autoCenter() {
+      //  Create a new viewpoint bound
+      var bounds = new google.maps.LatLngBounds();
+      //  Go through each...
+      for (var i = 0; i < markers.length; i++) {
+        bounds.extend(markers[i].position);
+      }
+      //  Fit these bounds to the map
+      map.fitBounds(bounds);
+    }
+    autoCenter();
+  </script>

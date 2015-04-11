@@ -8,6 +8,10 @@ Rails.application.routes.draw do
 
   post '/jobs/post', to: 'jobs#post'
   post '/jobs/delete', to: 'jobs#delete_job'
+  get '/search/noname', to: 'search#noname'
+
+
+
   root 'search#index'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

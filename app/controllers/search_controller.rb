@@ -3,14 +3,12 @@ class SearchController < ApplicationController
   def index
   end
 
-  def post 
+  def post
     binding.pry
   end
 
 
   def new
-    ##GETS ZIPCODE || CITY
-
     zipcode_uri = 'http://maps.googleapis.com/maps/api/geocode/json?'
     api_response = HTTParty.get(zipcode_uri, :query => {:address => params["location"]})
     if params["position"][0].empty? && params["position"].length < 2
@@ -30,7 +28,6 @@ class SearchController < ApplicationController
     zipcode = HTTParty.get("http://ipinfo.io/json")["postal"]
     end
     loc = zipcode || params["location"]
-
 
     params["radius"] == "" ? radius = 5 : radius =  params["radius"]
     if params["radius"] == ""
@@ -58,17 +55,14 @@ class SearchController < ApplicationController
         flash[:notice] = "Invalid Job"
         return redirect_to root_url
     else
+      if cresponse["ResponseJobSearch"]["Results"]["JobSearchResult"].is_a?(Hash)
+         $globalresults[:careerbuilder] << [cresponse["ResponseJobSearch"]["Results"]["JobSearchResult"]]
+      else
+         $globalresults[:careerbuilder] << cresponse["ResponseJobSearch"]["Results"]["JobSearchResult"]
+      end
 
-
-        if cresponse["ResponseJobSearch"]["Results"]["JobSearchResult"].is_a?(Hash)
-           $globalresults[:careerbuilder] << [cresponse["ResponseJobSearch"]["Results"]["JobSearchResult"]]
-        else
-           $globalresults[:careerbuilder] << cresponse["ResponseJobSearch"]["Results"]["JobSearchResult"]
-        end
-
-    break if i > cresponse["ResponseJobSearch"]["TotalPages"].to_i
-
-    end
+      break if i > cresponse["ResponseJobSearch"]["TotalPages"].to_i
+      end
     end
     $globalresults[:indeed] ||= []
 
@@ -84,7 +78,6 @@ class SearchController < ApplicationController
         flash[:notice] = "Invalid Job"
         return redirect_to root_url
       else
-
         if response["response"]["results"]["result"].is_a?(Hash)
           $globalresults[:indeed] << [response["response"]["results"]["result"]]
         else
@@ -97,13 +90,12 @@ class SearchController < ApplicationController
   end
     @job = Job.new
   end
-
-
+  if current_user.nil?
+    redirect_to '/search/noname'
+  end
   end
 
   def getDetails(query, base_uri)
   api_response = HTTParty.get(base_uri, :query => query)
   end
 end
-
-

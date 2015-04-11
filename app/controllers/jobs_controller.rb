@@ -4,6 +4,10 @@ class JobsController < ApplicationController
     @job = Job.new
   end
 
+
+  def noname
+  end
+
   def create
     if logged_in?
       city = City.find_by(name: params["job"]["city"]) || City.create(name: city_params["city"])
