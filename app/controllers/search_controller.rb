@@ -4,7 +4,6 @@ class SearchController < ApplicationController
   end
 
   def post
-    binding.pry
   end
 
 
@@ -41,16 +40,16 @@ class SearchController < ApplicationController
     end
 
     params["position"].delete("")
-    $globalresults ||= {}
+    $globalresults = {}
     params["position"].each do |position|
     i = 1
     $globalresults[:careerbuilder] ||= []
 
     while i < 5 do
-    querycareer =  {:location => loc, :keywords => position, :excludenational => true, :pagenumber => i, :radius => career_radius, :orderby => 'date', :perpage => 50 }
+    querycareer =  {:location => loc, :jobtitle => position, :excludenational => true, :pagenumber => i, :radius => career_radius, :orderby => 'date', :perpage => 50 }
+    
     career_uri = 'http://api.careerbuilder.com/v1/jobsearch?DeveloperKey=WDHV4LR6B3Y8W6T8FGDB'
     cresponse = getDetails(querycareer, career_uri)
-    binding.pry
     i += 1
     if !cresponse["ResponseJobSearch"]["Results"]
         flash[:notice] = "Invalid Job"
@@ -97,6 +96,6 @@ class SearchController < ApplicationController
   end
 
   def getDetails(query, base_uri)
-    api_response = HTTParty.get(base_uri, :query => query)
+    HTTParty.get(base_uri, :query => query)
   end
 end

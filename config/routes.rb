@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   get '/new_post', to: 'jobs#new'
 
   post '/jobs/post', to: 'jobs#post'
-  post '/jobs/delete', to: 'jobs#delete_job'
+  delete '/jobs/delete', to: 'jobs#delete_job'
   get '/search/noname', to: 'search#noname'
 
 
