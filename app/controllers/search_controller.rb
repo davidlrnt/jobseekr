@@ -90,9 +90,6 @@ class SearchController < ApplicationController
   end
     @job = Job.new
   end
-  if current_user.nil?
-    redirect_to '/search/noname'
-  end
   end
 
   def getDetails(query, base_uri)
