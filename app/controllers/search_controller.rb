@@ -50,6 +50,7 @@ class SearchController < ApplicationController
     querycareer =  {:location => loc, :keywords => position, :excludenational => true, :pagenumber => i, :radius => career_radius, :orderby => 'date', :perpage => 50 }
     career_uri = 'http://api.careerbuilder.com/v1/jobsearch?DeveloperKey=WDHV4LR6B3Y8W6T8FGDB'
     cresponse = getDetails(querycareer, career_uri)
+    binding.pry
     i += 1
     if !cresponse["ResponseJobSearch"]["Results"]
         flash[:notice] = "Invalid Job"
@@ -96,6 +97,6 @@ class SearchController < ApplicationController
   end
 
   def getDetails(query, base_uri)
-  api_response = HTTParty.get(base_uri, :query => query)
+    api_response = HTTParty.get(base_uri, :query => query)
   end
 end
