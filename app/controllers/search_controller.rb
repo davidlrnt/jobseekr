@@ -3,7 +3,7 @@ class SearchController < ApplicationController
   def index
   end
 
-  def post 
+  def post
     binding.pry
   end
 
@@ -44,7 +44,7 @@ class SearchController < ApplicationController
     end
 
     params["position"].delete("")
-    $globalresults ||= {}
+    $globalresults = {}
     params["position"].each do |position|
     i = 1
     $globalresults[:careerbuilder] ||= []
