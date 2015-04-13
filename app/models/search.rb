@@ -5,7 +5,7 @@ attr_accessor :address, :keywords
   @@googlezip = 'http://maps.googleapis.com/maps/api/geocode/json?'
 
   def initialize(location, keywords)
-    @location = get_location(location)
+    @location ||= get_location(location)
     @keywords = keywords
   end
 
@@ -19,10 +19,16 @@ attr_accessor :address, :keywords
 
   def get_zipcode(location)
     query = {:address => location}
-    binding.pry
-    api_caller(@@googlezip, query)["results"][0]["address_components"].select do |hash|
+    results = api_caller(@@googlezip, query)["results"]
+    if results.empty?
+      "Invalid Location"
+    elsif results[0]["address_components"].any? { |hash| hash.has_value?(["postal_code"]) }
+      results[0]["address_components"].select do |hash|
         hash.has_value?(["postal_code"])
       end[0]["long_name"]
+    else
+      location
+    end
   end
 
   def auto_zipcode

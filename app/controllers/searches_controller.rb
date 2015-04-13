@@ -11,11 +11,11 @@ class SearchesController < ApplicationController
   def new
     ##GETS ZIPCODE || CITY
     s = Search.new(params["location"], params["position"])
-    binding.pry
+    # binding.pry
     zipcode_uri = 'http://maps.googleapis.com/maps/api/geocode/json?'
     api_response = HTTParty.get(zipcode_uri, :query => {:address => params["location"]})
-    if params["position"][0].empty? && params["position"].length < 2
 
+    if params["position"][0].empty? && params["position"].length < 2
       flash[:notice] = "Invalid Job"
       redirect_to root_url
     elsif api_response["results"].empty? && !params["location"].empty?
