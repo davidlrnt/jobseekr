@@ -15,6 +15,8 @@
 <% @locationsarr = [] %>
 <% $globalresults[:indeed].each do |array| %>
   <% array.each do |hash| %>
+  <% @locationsarr << ["<a href=#{hash['url']}>#{hash['company']}</a><br>#{hash['jobtitle']} <br>", hash['latitude'].to_f,hash['longitude'].to_f] unless hash['latitude'].to_f == 0.0  %>
+
   <li class="resultsItem">
   <h2><a href="<%= hash['url'] %>"><%= hash['jobtitle'] %></a></h2>
   <h3><%= hash['company'] %></h3>
@@ -40,7 +42,6 @@
             <%= f.hidden_field :job_key, value: hash['jobkey'] %>
             <%= f.hidden_field :description, value: hash['snippet'] %>
             <%= f.hidden_field :date_posted, value: hash['date'] %>
-            <% @locationsarr << ["<a href=#{hash['url']}>#{hash['company']}</a><br>#{hash['jobtitle']} <br> #{f.submit 'Save'}", hash['latitude'].to_f,hash['longitude'].to_f] unless hash['latitude'].to_f == 0.0  %>
             <%= f.submit "Save"%><br><br>
           <% end %>
       <% end %>
