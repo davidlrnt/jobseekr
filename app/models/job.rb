@@ -4,4 +4,5 @@ class Job < ActiveRecord::Base
   has_many :users, through: :job_users
 
   # validates :name, :position, :description, :url, presence: true
+
 end

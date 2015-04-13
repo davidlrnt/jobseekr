@@ -1,4 +1,4 @@
-class SearchController < ApplicationController
+class SearchesController < ApplicationController
 
   def index
   end
@@ -10,7 +10,8 @@ class SearchController < ApplicationController
 
   def new
     ##GETS ZIPCODE || CITY
-
+    s = Search.new(params["location"], params["position"])
+    # binding.pry
     zipcode_uri = 'http://maps.googleapis.com/maps/api/geocode/json?'
     api_response = HTTParty.get(zipcode_uri, :query => {:address => params["location"]})
     if params["position"][0].empty? && params["position"].length < 2
