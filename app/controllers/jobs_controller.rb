@@ -17,7 +17,7 @@ class JobsController < ApplicationController
       end
 
       @job = Job.new
-      render 'search/new'
+      render 'searches/new'
     else
       redirect_to '/auth/linkedin'
     end
@@ -56,7 +56,7 @@ class JobsController < ApplicationController
     respond_to do |format|
       if @job.save
         format.html { redirect_to @job, notice: 'Post was successfully created.' }
-        format.json { render action: 'search/new', status: :created, location: @job }
+        format.json { render action: 'searches/new', status: :created, location: @job }
       else
         format.html { redirect_to '/auth/linkedin' }
       end
