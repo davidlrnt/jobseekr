@@ -1,47 +1,121 @@
-<h1>JOBSEEKR</h1>
+<div id="searchBar" class="searchBar verticalAlign">
 <%= form_tag("/search", method: "get") do %>
-<%= label_tag(:location, "Your location") %>
-<%= text_field_tag :location, nil, placeholder: "Ex. 25 Chapel st, Brooklyn" %>
-<%= label_tag(:position, "What Job Are You Looking For?") %>
+<%= label_tag(:position, "Looking for") %>
 <%= text_field_tag "position[]", nil, placeholder: "Web Developer" %>
-<%= submit_tag("Search") %>
+<%= label_tag(:location, "jobs near") %>
+<%= text_field_tag :location, nil, placeholder: "25 Chapel St., Brooklyn" %>
+<%= submit_tag "Search", :id => "searchButton"  %>
+<a onclick="showPopup('popup');">(Advanced Search)</a>
 <% end %>
-<div id="popup" class="popup">
-<%= form_tag("/search", method: "get") do %>
-<%= label_tag(:location, "Your location") %>
-<%= text_field_tag :location, nil, placeholder: "Ex. 25 Chapel st, Brooklyn" %>
-<%= label_tag(:position, "What Jobs Are You Looking For?") %>
-<%= text_field_tag "position[]", nil, placeholder: "Rails"%>
-<%= text_field_tag "position[]", nil, placeholder: "RoR" %>
-<%= text_field_tag "position[]", nil, placeholder: "JavaScript" %>
-<%= text_field_tag "position[]", nil, placeholder: "Python" %>
-<%= text_field_tag "position[]", nil, placeholder: "Django" %>
 
-<%= label_tag(:radius, "Search Radius: (miles)") %>
+<div id="advancedSearch">
+<%= form_tag("/search", method: "get") do %>
+<%= label_tag(:position, "Enter up to five job titles you're interested in:") %>
+<br>
+<br><%= text_field_tag "position[]", nil, placeholder: "Rails"%>
+    <%= text_field_tag "position[]", nil, placeholder: "RoR" %>
+<br><%= text_field_tag "position[]", nil, placeholder: "JavaScript" %>
+    <%= text_field_tag "position[]", nil, placeholder: "Python" %>
+<br><%= text_field_tag "position[]", nil, placeholder: "Django" %>
+
+<br>
+<br>
 <%= select_tag(:radius, options_for_select(1..25)) %>
-<%= submit_tag("Search") %>
+<%= label_tag(:location, "miles away from") %>
+<%= text_field_tag :location, nil, placeholder: "Ex. 25 Chapel st, Brooklyn" %>
+
+<br>
+<br><%= submit_tag("Search") %>
+
+<br>
+<br><a onclick="showPopup('popup');"><i class="fa fa-close"></i>Back to Simple Search</a>
+
 <% end %>
+
 </div>
 
-<a onclick="showPopup('popup');">Advanced Search</a>
+</div>
 
-<style type="text/css">
-  .popup {
-    width:200px;
-    height:100px;
-    position:absolute;
-    top:50%;
-    left:50%;
-    margin:-50px 0 0 -100px; /* [-(height/2)px 0 0 -(width/2)px] */
-    display:none;
-  }
-</style>
+
+
+
+
+
+
+<div id="map">
+
+  </div>
+
+  <div class="madeBy">
+    <p>by <a href="https://github.com/legendss/">David</a>, <a href="https://github.com/axton21">Anton</a>, <a href="https://github.com/peterhwang2010">Peter</a>, & <a href="http://www.github.com/mandelbulb/">Andrew</a> with <a href="http://www.flatironschool.com">♥</a></p>
+  </div>
+
+<script src="http://jawj.github.com/OverlappingMarkerSpiderfier/bin/oms.min.js"></script>
+
+  <script>
+    // Define your locations: HTML content for the info window, latitude, longitude
+    var locations = <%= raw @locationsarr.to_json %>;
+    var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 13,
+      center: new google.maps.LatLng(40.7412,-73.9973),
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      mapTypeControl: false,
+      streetViewControl: false,
+      panControl: false,
+      zoomControlOptions: {
+         position: google.maps.ControlPosition.LEFT_BOTTOM
+      }
+    });
+
+    var infowindow = new google.maps.InfoWindow({
+      maxWidth: 160
+    });
+
+    var markers = new Array();
+
+    var iconCounter = 0;
+
+    // Add the markers and infowindows to the map
+    for (var i = 0; i < locations.length; i++) {
+      var marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map,
+        icon: icons[iconCounter]
+      });
+
+      markers.push(marker);
+
+    }
+
+    function autoCenter() {
+      //  Create a new viewpoint bound
+      var bounds = new google.maps.LatLngBounds();
+      //  Go through each...
+      for (var i = 0; i < markers.length; i++) {
+        bounds.extend(markers[i].position);
+      }
+      //  Fit these bounds to the map
+      map.fitBounds(bounds);
+    }
+    autoCenter();
+  </script>
+
+
+
+
+
+
+
+
 
 <script type="text/javascript">
 
 
   function showPopup(id) {
-     $("#popup").slideToggle();
+     $("#advancedSearch").slideToggle(400);
+     $("#searchBar>form").slideToggle(400);
 
   };
 

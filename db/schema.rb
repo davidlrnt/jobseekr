@@ -22,8 +22,9 @@ ActiveRecord::Schema.define(version: 20150406173333) do
   create_table "job_users", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "job_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.boolean  "applied",    default: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   add_index "job_users", ["job_id"], name: "index_job_users_on_job_id"

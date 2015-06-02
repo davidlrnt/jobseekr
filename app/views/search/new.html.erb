@@ -1,36 +1,123 @@
-<% @locationsarr = [] %>
-<% @results.each do |array| %>
-<% array.each do |hash| %>
-<% @locationsarr << [hash['company'], hash['latitude'].to_f,hash['longitude'].to_f] %>
-<p><b><%= hash['jobtitle'] %></b></p>
-
-<p><%= hash['company'] %></p>
-
-<p><%= hash['city'] %></p>
-
-<p><%= hash['snippet'] %></p>
+<div id="searchBar" class="searchBar fullWidth">
+<%= form_tag("/search", method: "get") do %>
+<%= label_tag(:position, "Looking for") %>
+<%= text_field_tag "position[]", nil, placeholder: "Web Developer" %>
+<%= label_tag(:location, "jobs near") %>
+<%= text_field_tag :location, nil, placeholder: "Ex. 25 Chapel st, Brooklyn" %>
+<%= submit_tag("Search") %>
+<% end %>
+</div>
 <% if logged_in? %>
-  <%= form_for @job do |f| %>
-    <%= f.hidden_field :company, value: hash['company'] %>
-    <%= f.hidden_field :position, value: hash['jobtitle'] %>
-    <%= f.hidden_field :country, value: hash['country'] %>
-    <%= f.hidden_field :state, value: hash['state'] %>
-    <%= f.hidden_field :url, value: hash['url'] %>
-    <%= f.hidden_field :city, value: hash['city'] %>
-    <%= f.hidden_field :lat, value: hash['latitude'] %>
-    <%= f.hidden_field :long, value: hash['longitude'] %>
-    <%= f.hidden_field :job_key, value: hash['jobkey'] %>
-    <%= f.hidden_field :description, value: hash['snippet'] %>
-    <%= f.hidden_field :date_posted, value: hash['date'] %>
-    <%= f.submit "Save"%>
+<% jobs_key = saved_jobs_key %>
+<% end %>
+<div class="resultsContainer">
+<ul class="resultsList">
+<% @locationsarr = [] %>
+<% $globalresults[:indeed].each do |array| %>
+  <% array.each do |hash| %>
+  <li class="resultsItem">
+  <h2><a href="<%= hash['url'] %>"><%= hash['jobtitle'] %></a></h2>
+  <h3><%= hash['company'] %></h3>
+  <p><%= hash['city'] %></p>
+  <p><%= hash['snippet'] %></p>
+  <p>Date Posted: <%= hash['date']%></p>
+  <br>
+  <a href="http://www.glassdoor.com/GD/Reviews/company-reviews.htm?suggestCount=0&suggestChosen=false&clickSource=searchBtn&typedKeyword=<%= hash['company'] %>&sc.keyword=<%= hash['company'] %>&locT=&locId=">Glassdoor Reviews</a><br><br>
+
+    <% if logged_in? %>
+       <% if jobs_key.include?(hash['jobkey']) %>
+        <p><b>saved</b></p>
+        <% else %>
+          <%= form_for @job do |f| %>
+            <%= f.hidden_field :company, value: hash['company'] %>
+            <%= f.hidden_field :position, value: hash['jobtitle'] %>
+            <%= f.hidden_field :country, value: hash['country'] %>
+            <%= f.hidden_field :state, value: hash['state'] %>
+            <%= f.hidden_field :url, value: hash['url'] %>
+            <%= f.hidden_field :city, value: hash['city'] %>
+            <%= f.hidden_field :lat, value: hash['latitude'] %>
+            <%= f.hidden_field :long, value: hash['longitude'] %>
+            <%= f.hidden_field :job_key, value: hash['jobkey'] %>
+            <%= f.hidden_field :description, value: hash['snippet'] %>
+            <%= f.hidden_field :date_posted, value: hash['date'] %>
+            <% @locationsarr << ["<a href=#{hash['url']}>#{hash['company']}</a><br>#{hash['jobtitle']} <br> #{f.submit 'Save'}", hash['latitude'].to_f,hash['longitude'].to_f] unless hash['latitude'].to_f == 0.0  %>
+            <%= f.submit "Save"%><br><br>
+          <% end %>
+      <% end %>
+      <% @job_ticker = Job.find_by_job_key(hash['jobkey']) %>
+      <% if @job_ticker.nil? || @job_ticker.job_users.where(applied:true).size < 1 %>
+        No one has applied yet.
+      <% else %>
+        <% counter = @job_ticker.job_users.where(applied:true)  %>
+        <% if counter.size == 1 %>
+          1 person has applied
+        <% else %>
+          <%= counter.size %> people have applied.
+        <% end %>
+      <% end %>
+    <%end %>
+  <%end %>
+<% end %>
+</li>
+
+<% $globalresults[:careerbuilder].each do |array| %>
+  <% array.each do |hash| %>
+  <%# if [hash['JobDetailsURL'], hash['Company'],hash['JobTitle'],hash['State'], hash['City'], hash['LocationLatitude'], hash['LocationLongitude'], hash['DID'], hash['DescriptionTeaser'], hash['PostedDate'] ].any? {|e| e.nil?} %>
+  <li class="resultsItem">
+  <% @locationsarr << ["<a href=#{hash['JobDetailsURL']}>#{hash['Company']}</a>
+  <h3>#{hash['JobTitle']}</h3>
+  <br>
+  <p>#{hash['Skills']['Skill'].join(", ") unless hash['Skills'].nil? || hash['Skills']['Skill'].is_a?(String)}</p>", hash['LocationLatitude'].to_f,hash['LocationLongitude'].to_f] unless hash['LocationLatitude'].to_f == 0.0 %>
+
+  <h2><a href="<%= hash['JobDetailsURL'] %>"><%= hash["JobTitle"] %></a></h2>
+
+  <h3><%= hash['Company'] %></h3>
+  <p><%= hash['City'] %></p>
+  <p><%= hash['DescriptionTeaser'] %></p>
+  <p>Date Posted: <%= hash['PostedDate']%></p>
+  <a href="http://www.glassdoor.com/GD/Reviews/company-reviews.htm?suggestCount=0&suggestChosen=false&clickSource=searchBtn&typedKeyword=<%= hash['Company'] %>&sc.keyword=<%= hash['Company'] %>&locT=&locId=">Glassdoor Reviews</a>
+
+        <% if logged_in? %>
+       <% if jobs_key.include?(hash['DID']) %>
+        <p><b>saved</b></p>
+        <% else %>
+      <%= form_for @job do |f| %>
+        <%= f.hidden_field :company, value: hash['Company'] %>
+        <%= f.hidden_field :position, value: hash['JobTitle'] %>
+        <%= f.hidden_field :country, value: 'US' %>
+        <%= f.hidden_field :state, value: hash['State'] %>
+        <%= f.hidden_field :url, value: hash['JobDetailsURL'] %>
+        <%= f.hidden_field :city, value: hash['City'] %>
+        <%= f.hidden_field :lat, value: hash['LocationLatitude'] %>
+        <%= f.hidden_field :long, value: hash['LocationLongitude'] %>
+        <%= f.hidden_field :job_key, value: hash['DID'] %>
+        <%= f.hidden_field :description, value: hash['DescriptionTeaser'] %>
+        <%= f.hidden_field :date_posted, value: hash['PostedDate'] %>
+        <%= f.submit "Save"%><br>
+      <% end %>
+      <% end %>
+      <% @job_ticker = Job.find_by_job_key(hash['DID']) %>
+      <% if @job_ticker.nil? || @job_ticker.job_users.where(applied:true).size < 1 %>
+        No one has applied yet.
+      <% else %>
+        <% counter = @job_ticker.job_users.where(applied:true)  %>
+        <%= counter.size %> people applied.
+      <% end %>
+    <br><br><br>
+    <%end %>
+    <%#end %>
   <% end %>
 <% end %>
-<br><br>
+</div>
+</li>
+</ul>
+</div>
 
-<%end %>
-<% end %>
-  <div id="map"></div>
+  <div id="map" style="opacity: 0.9;">
 
+  </div>
+
+<script src="http://jawj.github.com/OverlappingMarkerSpiderfier/bin/oms.min.js"></script>
 
   <script>
     // Define your locations: HTML content for the info window, latitude, longitude
@@ -50,7 +137,7 @@
 
     var map = new google.maps.Map(document.getElementById('map'), {
       zoom: 10,
-      center: new google.maps.LatLng(-37.92, 151.25),
+      center: new google.maps.LatLng(40.7412,-73.9973),
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       mapTypeControl: false,
       streetViewControl: false,
@@ -59,6 +146,8 @@
          position: google.maps.ControlPosition.LEFT_BOTTOM
       }
     });
+
+    var oms = new OverlappingMarkerSpiderfier(map);
 
     var infowindow = new google.maps.InfoWindow({
       maxWidth: 160
@@ -77,8 +166,9 @@
       });
 
       markers.push(marker);
+      oms.addMarker(marker);
 
-      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+      google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
         return function() {
           infowindow.setContent(locations[i][0]);
           infowindow.open(map, marker);

@@ -1,14 +1,17 @@
-
-
-<nav>
-  <h4><%= link_to "Home", root_path %></h4>
-<ul>
+<nav class="homeNav">
+	<%= link_to "Home", root_path %>
   <% if logged_in? %>
-  <%= link_to "Log Out", "/logout", :method => 'delete' %>
   <%= link_to "Profile", current_user %>
+  <%= link_to "Post Job", new_post_path  %>
+  <%= link_to "Log Out", "/logout", :method => 'delete' %>
   <% else %>
-  <h1>Log in</h1>
   <%= link_to("Login", '/auth/linkedin') %>
   <% end %>
-</ul>
 </nav>
+
+<div class="logo">
+	<a>
+    <img src="/assets/logo.png">
+		<h4>JOBSEEKR</h4>
+		</a>
+</div>
