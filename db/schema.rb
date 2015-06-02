@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150406172218) do
+ActiveRecord::Schema.define(version: 20150406173333) do
 
   create_table "cities", force: :cascade do |t|
     t.string   "name"
@@ -42,7 +42,6 @@ ActiveRecord::Schema.define(version: 20150406172218) do
     t.date     "date_posted"
     t.text     "description"
     t.string   "job_key"
-    t.integer  "creator_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
   end
